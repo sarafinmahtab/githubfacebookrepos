@@ -18,6 +18,7 @@ import dagger.Component;
 // Definition of a Dagger component that adds info from the different modules to the graph
 @Component(
         modules = {
+                ViewModelModule.class,
                 AppSubComponent.class
         }
 )

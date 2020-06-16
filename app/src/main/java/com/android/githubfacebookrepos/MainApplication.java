@@ -6,8 +6,10 @@ package com.android.githubfacebookrepos;
 
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.annotation.UiThread;
+import androidx.multidex.MultiDex;
 
 import com.android.githubfacebookrepos.di.AppComponent;
 import com.android.githubfacebookrepos.di.DaggerAppComponent;
@@ -15,6 +17,12 @@ import com.android.githubfacebookrepos.di.DaggerAppComponent;
 public class MainApplication extends Application {
 
     private AppComponent appComponent;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
     @UiThread
     public AppComponent getAppComponent() {
