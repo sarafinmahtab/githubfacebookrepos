@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel.orgRepoListLiveData.observe(this, orgRepoListObserver);
 
 
-        viewModel.fetchGithubRepos(orgRepoName);
+        viewModel.fetchGithubRepos(orgRepoName, CommonUtil.isNetworkConnectionAvailable(this));
     }
 
 

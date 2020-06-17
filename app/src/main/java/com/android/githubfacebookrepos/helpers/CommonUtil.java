@@ -4,6 +4,10 @@ package com.android.githubfacebookrepos.helpers;
  * Created by Arafin Mahtab on 6/17/20.
  */
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.android.githubfacebookrepos.model.exceptions.LocalException;
 import com.android.githubfacebookrepos.model.exceptions.NetworkException;
 import com.android.githubfacebookrepos.model.exceptions.ServerException;
@@ -31,5 +35,13 @@ public final class CommonUtil {
         } else {
             return throwable.getMessage();
         }
+    }
+
+    public static boolean isNetworkConnectionAvailable(Context context) {
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 }

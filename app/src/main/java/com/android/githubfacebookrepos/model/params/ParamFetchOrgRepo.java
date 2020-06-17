@@ -4,18 +4,14 @@ package com.android.githubfacebookrepos.model.params;
  * Created by Arafin Mahtab on 6/16/20.
  */
 
-public class ParamFetchOrgRepo {
+public class ParamFetchOrgRepo extends BaseRequestParam {
 
-    private boolean cacheResponse = false;
     private String orgName;
 
-    public ParamFetchOrgRepo(boolean cacheResponse, String orgName) {
-        this.cacheResponse = cacheResponse;
-        this.orgName = orgName;
-    }
+    public ParamFetchOrgRepo(boolean cacheResponse, boolean isNetworkAvailable, String orgName) {
+        super(cacheResponse, isNetworkAvailable);
 
-    public boolean isCacheResponse() {
-        return cacheResponse;
+        this.orgName = orgName;
     }
 
     public String getOrgName() {

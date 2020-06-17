@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 /**
  * Response holder provided to the UI
  */
-public class ResponseHolder<T> {
+public final class ResponseHolder<T> {
 
 
     private Status status;
