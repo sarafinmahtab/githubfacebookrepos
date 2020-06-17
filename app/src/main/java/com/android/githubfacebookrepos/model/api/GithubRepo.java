@@ -1,13 +1,11 @@
 
-package com.android.githubfacebookrepos.model;
+package com.android.githubfacebookrepos.model.api;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.Objects;
 
 public class GithubRepo implements Parcelable {
 
@@ -1062,92 +1060,6 @@ public class GithubRepo implements Parcelable {
         dest.writeValue(watchers);
         dest.writeValue(defaultBranch);
         dest.writeValue(permissions);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GithubRepo that = (GithubRepo) o;
-        return id == that.id &&
-                _private == that._private &&
-                fork == that.fork &&
-                size == that.size &&
-                stargazersCount == that.stargazersCount &&
-                watchersCount == that.watchersCount &&
-                hasIssues == that.hasIssues &&
-                hasProjects == that.hasProjects &&
-                hasDownloads == that.hasDownloads &&
-                hasWiki == that.hasWiki &&
-                hasPages == that.hasPages &&
-                forksCount == that.forksCount &&
-                archived == that.archived &&
-                disabled == that.disabled &&
-                openIssuesCount == that.openIssuesCount &&
-                forks == that.forks &&
-                openIssues == that.openIssues &&
-                watchers == that.watchers &&
-                nodeId.equals(that.nodeId) &&
-                name.equals(that.name) &&
-                Objects.equals(fullName, that.fullName) &&
-                Objects.equals(owner, that.owner) &&
-                htmlUrl.equals(that.htmlUrl) &&
-                Objects.equals(description, that.description) &&
-                url.equals(that.url) &&
-                forksUrl.equals(that.forksUrl) &&
-                keysUrl.equals(that.keysUrl) &&
-                collaboratorsUrl.equals(that.collaboratorsUrl) &&
-                teamsUrl.equals(that.teamsUrl) &&
-                hooksUrl.equals(that.hooksUrl) &&
-                issueEventsUrl.equals(that.issueEventsUrl) &&
-                eventsUrl.equals(that.eventsUrl) &&
-                assigneesUrl.equals(that.assigneesUrl) &&
-                branchesUrl.equals(that.branchesUrl) &&
-                tagsUrl.equals(that.tagsUrl) &&
-                blobsUrl.equals(that.blobsUrl) &&
-                gitTagsUrl.equals(that.gitTagsUrl) &&
-                gitRefsUrl.equals(that.gitRefsUrl) &&
-                treesUrl.equals(that.treesUrl) &&
-                statusesUrl.equals(that.statusesUrl) &&
-                languagesUrl.equals(that.languagesUrl) &&
-                stargazersUrl.equals(that.stargazersUrl) &&
-                contributorsUrl.equals(that.contributorsUrl) &&
-                subscribersUrl.equals(that.subscribersUrl) &&
-                subscriptionUrl.equals(that.subscriptionUrl) &&
-                commitsUrl.equals(that.commitsUrl) &&
-                gitCommitsUrl.equals(that.gitCommitsUrl) &&
-                commentsUrl.equals(that.commentsUrl) &&
-                issueCommentUrl.equals(that.issueCommentUrl) &&
-                contentsUrl.equals(that.contentsUrl) &&
-                compareUrl.equals(that.compareUrl) &&
-                mergesUrl.equals(that.mergesUrl) &&
-                archiveUrl.equals(that.archiveUrl) &&
-                downloadsUrl.equals(that.downloadsUrl) &&
-                issuesUrl.equals(that.issuesUrl) &&
-                pullsUrl.equals(that.pullsUrl) &&
-                milestonesUrl.equals(that.milestonesUrl) &&
-                notificationsUrl.equals(that.notificationsUrl) &&
-                labelsUrl.equals(that.labelsUrl) &&
-                releasesUrl.equals(that.releasesUrl) &&
-                deploymentsUrl.equals(that.deploymentsUrl) &&
-                createdAt.equals(that.createdAt) &&
-                Objects.equals(updatedAt, that.updatedAt) &&
-                Objects.equals(pushedAt, that.pushedAt) &&
-                gitUrl.equals(that.gitUrl) &&
-                sshUrl.equals(that.sshUrl) &&
-                cloneUrl.equals(that.cloneUrl) &&
-                svnUrl.equals(that.svnUrl) &&
-                Objects.equals(homepage, that.homepage) &&
-                Objects.equals(language, that.language) &&
-                Objects.equals(mirrorUrl, that.mirrorUrl) &&
-                Objects.equals(license, that.license) &&
-                Objects.equals(defaultBranch, that.defaultBranch) &&
-                Objects.equals(permissions, that.permissions);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, nodeId, name, fullName, _private, owner, htmlUrl, description, fork, url, forksUrl, keysUrl, collaboratorsUrl, teamsUrl, hooksUrl, issueEventsUrl, eventsUrl, assigneesUrl, branchesUrl, tagsUrl, blobsUrl, gitTagsUrl, gitRefsUrl, treesUrl, statusesUrl, languagesUrl, stargazersUrl, contributorsUrl, subscribersUrl, subscriptionUrl, commitsUrl, gitCommitsUrl, commentsUrl, issueCommentUrl, contentsUrl, compareUrl, mergesUrl, archiveUrl, downloadsUrl, issuesUrl, pullsUrl, milestonesUrl, notificationsUrl, labelsUrl, releasesUrl, deploymentsUrl, createdAt, updatedAt, pushedAt, gitUrl, sshUrl, cloneUrl, svnUrl, homepage, size, stargazersCount, watchersCount, language, hasIssues, hasProjects, hasDownloads, hasWiki, hasPages, forksCount, mirrorUrl, archived, disabled, openIssuesCount, license, forks, openIssues, watchers, defaultBranch, permissions);
     }
 
     public int describeContents() {

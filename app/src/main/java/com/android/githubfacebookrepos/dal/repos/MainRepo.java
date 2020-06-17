@@ -4,7 +4,7 @@ package com.android.githubfacebookrepos.dal.repos;
  * Created by Arafin Mahtab on 6/16/20.
  */
 
-import com.android.githubfacebookrepos.model.GithubRepo;
+import com.android.githubfacebookrepos.model.api.GithubRepo;
 
 import java.util.ArrayList;
 

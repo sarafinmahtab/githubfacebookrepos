@@ -1,5 +1,5 @@
 
-package com.android.githubfacebookrepos.model;
+package com.android.githubfacebookrepos.model.api;
 
 import android.os.Parcel;
 import android.os.Parcelable;

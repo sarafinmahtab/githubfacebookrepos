@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.android.githubfacebookrepos.helpers.ResponseHolder;
-import com.android.githubfacebookrepos.model.GithubRepo;
+import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.model.params.ParamFetchOrgRepo;
 import com.android.githubfacebookrepos.usecase.FetchOrgRepos;
 
@@ -22,7 +22,7 @@ public class MainViewModel extends ViewModel {
 
     private FetchOrgRepos fetchOrgReposUseCase;
 
-    MutableLiveData<ResponseHolder<ArrayList<GithubRepo>>> orgRepoListLiveData = new MutableLiveData<>();
+    MutableLiveData<ResponseHolder<ArrayList<GithubRepoMin>>> orgRepoListLiveData = new MutableLiveData<>();
 
     @Inject
     public MainViewModel(FetchOrgRepos fetchOrgRepos) {
@@ -40,9 +40,9 @@ public class MainViewModel extends ViewModel {
 
         fetchOrgReposUseCase.execute(
                 new ParamFetchOrgRepo(true, orgName),
-                new DisposableSingleObserver<ResponseHolder<ArrayList<GithubRepo>>>() {
+                new DisposableSingleObserver<ResponseHolder<ArrayList<GithubRepoMin>>>() {
                     @Override
-                    public void onSuccess(ResponseHolder<ArrayList<GithubRepo>> arrayListResponseHolder) {
+                    public void onSuccess(ResponseHolder<ArrayList<GithubRepoMin>> arrayListResponseHolder) {
                         orgRepoListLiveData.postValue(arrayListResponseHolder);
 
                         dispose();

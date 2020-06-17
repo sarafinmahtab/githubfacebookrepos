@@ -5,7 +5,7 @@ package com.android.githubfacebookrepos.dal.repos;
  */
 
 import com.android.githubfacebookrepos.dal.network.ApiService;
-import com.android.githubfacebookrepos.model.GithubRepo;
+import com.android.githubfacebookrepos.model.api.GithubRepo;
 
 import java.util.ArrayList;
 

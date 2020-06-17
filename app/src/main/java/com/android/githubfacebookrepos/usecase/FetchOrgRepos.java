@@ -8,12 +8,14 @@ import com.android.githubfacebookrepos.base.SingleUseCase;
 import com.android.githubfacebookrepos.dal.repos.MainRepo;
 import com.android.githubfacebookrepos.helpers.CommonUtil;
 import com.android.githubfacebookrepos.helpers.ResponseHolder;
-import com.android.githubfacebookrepos.model.GithubRepo;
+import com.android.githubfacebookrepos.model.api.GithubRepo;
+import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.model.params.ParamFetchOrgRepo;
 import com.android.githubfacebookrepos.worker.SchedulerType;
 import com.android.githubfacebookrepos.worker.WorkScheduler;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -25,7 +27,7 @@ import retrofit2.HttpException;
 /**
  * Dedicated UseCase Business logic responsible for fetching github organization repos
  */
-public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHolder<ArrayList<GithubRepo>>> {
+public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHolder<ArrayList<GithubRepoMin>>> {
 
     private MainRepo mainRepo;
 
@@ -39,14 +41,25 @@ public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHold
     }
 
     @Override
-    protected Single<ResponseHolder<ArrayList<GithubRepo>>> buildUseCaseSingle(ParamFetchOrgRepo paramFetchOrgRepo) {
+    protected Single<ResponseHolder<ArrayList<GithubRepoMin>>> buildUseCaseSingle(ParamFetchOrgRepo paramFetchOrgRepo) {
 
         return mainRepo.fetchOrganizationRepos(paramFetchOrgRepo.getOrgName())
-                .map(new Function<ArrayList<GithubRepo>, ResponseHolder<ArrayList<GithubRepo>>>() {
-                    @Override
-                    public ResponseHolder<ArrayList<GithubRepo>> apply(ArrayList<GithubRepo> githubRepos) throws Exception {
-                        return ResponseHolder.success(githubRepos);
-                    }
+                .map((Function<ArrayList<GithubRepo>, ResponseHolder<ArrayList<GithubRepoMin>>>) githubRepos -> {
+
+                    ArrayList<GithubRepoMin> githubRepoMinArrayList = githubRepos.stream()
+                            .map(githubRepo -> new GithubRepoMin(
+                                    githubRepo.getId(),
+                                    githubRepo.getName(),
+                                    githubRepo.isPrivate(),
+                                    githubRepo.getOwner().getLogin(),
+                                    githubRepo.getOwner().getAvatarUrl(),
+                                    githubRepo.getUpdatedAt(),
+                                    githubRepo.getLanguage(),
+                                    githubRepo.getDescription(),
+                                    githubRepo.isFork())
+                            ).collect(Collectors.toCollection(ArrayList::new));
+
+                    return ResponseHolder.success(githubRepoMinArrayList);
                 })
                 .onErrorReturn(throwable -> {
 
