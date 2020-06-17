@@ -22,7 +22,7 @@ public class MainViewModel extends ViewModel {
 
     private FetchOrgRepos fetchOrgReposUseCase;
 
-    MutableLiveData<ResponseHolder<ArrayList<GithubRepo>>> orgRepoListLiveData;
+    MutableLiveData<ResponseHolder<ArrayList<GithubRepo>>> orgRepoListLiveData = new MutableLiveData<>();
 
     @Inject
     public MainViewModel(FetchOrgRepos fetchOrgRepos) {

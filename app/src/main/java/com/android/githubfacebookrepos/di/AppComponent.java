@@ -19,6 +19,7 @@ import dagger.Component;
 @Component(
         modules = {
                 NetworkModule.class,
+                RepositoryModule.class,
                 ViewModelModule.class,
                 AppSubComponent.class
         }
