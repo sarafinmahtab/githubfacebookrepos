@@ -4,6 +4,7 @@ package com.android.githubfacebookrepos.dal.network;
  * Created by Arafin Mahtab on 6/18/20.
  */
 
+import com.android.githubfacebookrepos.di.AppScope;
 import com.android.githubfacebookrepos.model.api.GithubRepo;
 
 import java.util.ArrayList;
@@ -12,9 +13,11 @@ import javax.inject.Inject;
 
 import io.reactivex.Single;
 
+
 /**
- * Data source responsible how the data will be fetched from remote
+ * This DataSource initiates the corresponding service which is responsible to load data from server
  */
+@AppScope
 public class RemoteDataSourceImpl implements RemoteDataSource {
 
     private final String TAG = this.getClass().getName();

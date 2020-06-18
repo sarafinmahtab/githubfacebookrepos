@@ -12,7 +12,7 @@ import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class WorkScheduler {
+public final class WorkScheduler {
 
     public static Scheduler with(@SchedulerType int currentScheduler) {
 

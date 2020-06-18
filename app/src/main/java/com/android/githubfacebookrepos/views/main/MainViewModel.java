@@ -53,7 +53,8 @@ public class MainViewModel extends ViewModel {
                     public void onSuccess(ResponseHolder<ArrayList<GithubRepoMin>> arrayListResponseHolder) {
                         orgRepoListLiveData.postValue(arrayListResponseHolder);
 
-                        if (isConnectionAvailable) {
+                        if (AppConstant.offlineModeEnabled && isConnectionAvailable) {
+                            // Saving latest data fetched from server
                             saveOrgReposUseCase.execute(arrayListResponseHolder.getData());
                         }
 

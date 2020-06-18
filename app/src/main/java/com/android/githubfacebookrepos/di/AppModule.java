@@ -18,10 +18,10 @@ public abstract class AppModule {
 
     // Makes Dagger provide RemoteDataSourceImpl when a RemoteDataSource type is requested
     @Binds
-    public abstract RemoteDataSource provideRemoteDataSourceImpl(RemoteDataSourceImpl remoteDataSourceImpl);
+    public abstract RemoteDataSource providesRemoteDataSource(RemoteDataSourceImpl remoteDataSourceImpl);
 
 
     // Makes Dagger provide LocalDataSourceImpl when a LocalDataSource type is requested
     @Binds
-    public abstract LocalDataSource provideLocalDataSourceImpl(LocalDataSourceImpl localDataSourceImpl);
+    public abstract LocalDataSource providesLocalDataSource(LocalDataSourceImpl localDataSourceImpl);
 }

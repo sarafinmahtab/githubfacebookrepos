@@ -19,6 +19,10 @@ import javax.inject.Inject;
 
 import io.reactivex.Completable;
 
+
+/**
+ * Dedicated UseCase Business logic responsible for saving github organization repos locally
+ */
 public class SaveOrgRepos extends CompletableUseCase<ArrayList<GithubRepoMin>> {
 
     private final String TAG = this.getClass().getName();
@@ -38,7 +42,6 @@ public class SaveOrgRepos extends CompletableUseCase<ArrayList<GithubRepoMin>> {
     @Override
     protected Completable buildUseCaseCompletable(ArrayList<GithubRepoMin> githubRepoMins) {
 
-        // Saving latest data fetched from server
         return mainRepo.saveOrganizationReposLocally(githubRepoMins)
                 .onErrorComplete(throwable -> {
                     String error = CommonUtil.prepareErrorMessage(throwable);

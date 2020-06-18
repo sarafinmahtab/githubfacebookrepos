@@ -6,6 +6,7 @@ package com.android.githubfacebookrepos.dal.db;
 
 import android.util.Log;
 
+import com.android.githubfacebookrepos.di.AppScope;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 
 import java.util.ArrayList;
@@ -13,9 +14,12 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
-import io.reactivex.Flowable;
 import io.reactivex.Single;
 
+/**
+ * This DataSource initiates the corresponding service which is responsible to load data locally
+ */
+@AppScope
 public class LocalDataSourceImpl implements LocalDataSource {
 
     private final String TAG = this.getClass().getName();
