@@ -53,6 +53,7 @@ public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHold
                                         githubRepo.getId(),
                                         githubRepo.getName(),
                                         githubRepo.isPrivate(),
+                                        githubRepo.getOwner().getId(),
                                         githubRepo.getOwner().getLogin(),
                                         githubRepo.getOwner().getAvatarUrl(),
                                         githubRepo.getUpdatedAt(),
@@ -60,6 +61,9 @@ public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHold
                                         githubRepo.getDescription(),
                                         githubRepo.isFork())
                                 ).collect(Collectors.toCollection(ArrayList::new));
+
+                        // Saving latest data fetched from server
+                        mainRepo.saveOrganizationReposLocally(githubRepoMinArrayList);
 
                         return ResponseHolder.success(githubRepoMinArrayList);
                     })
@@ -78,9 +82,8 @@ public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHold
         } else {
             // Loading cached GithubRepoMin data as there is no available internet connection
 
-//            return mainRepo.fetchCachedOrganizationRepos(paramFetchOrgRepo.getOrgName());
-
-            return Single.never();
+            return mainRepo.fetchCachedOrganizationRepos(paramFetchOrgRepo.getOrgName())
+                    .map(ResponseHolder::success);
         }
     }
 }

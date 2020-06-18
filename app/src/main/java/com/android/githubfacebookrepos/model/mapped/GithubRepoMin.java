@@ -9,18 +9,15 @@ import android.os.Parcelable;
 
 import java.util.Objects;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
 /**
  * Minimized mapped model of Github Repo
  */
-public class GithubRepoMin extends RealmObject implements Parcelable {
+public class GithubRepoMin implements Parcelable {
 
-    @PrimaryKey
     private int repoId;
     private String repoName;
     private boolean isPrivate;
+    private int orgId;
     private String orgName;
     private String orgAvatarUrl;
     private String updatedDate;
@@ -28,10 +25,18 @@ public class GithubRepoMin extends RealmObject implements Parcelable {
     private String description;
     private boolean isForked;
 
+    /**
+     * Public constructor with no arguments
+     */
+    public GithubRepoMin() {
+
+    }
+
     public GithubRepoMin(
             int repoId,
             String repoName,
             boolean isPrivate,
+            int orgId,
             String orgName,
             String orgAvatarUrl,
             String updatedDate,
@@ -42,6 +47,7 @@ public class GithubRepoMin extends RealmObject implements Parcelable {
         this.repoId = repoId;
         this.repoName = repoName;
         this.isPrivate = isPrivate;
+        this.orgId = orgId;
         this.orgName = orgName;
         this.orgAvatarUrl = orgAvatarUrl;
         this.updatedDate = updatedDate;
@@ -54,6 +60,7 @@ public class GithubRepoMin extends RealmObject implements Parcelable {
         repoId = in.readInt();
         repoName = in.readString();
         isPrivate = in.readByte() != 0;
+        orgId = in.readInt();
         orgName = in.readString();
         orgAvatarUrl = in.readString();
         updatedDate = in.readString();
@@ -96,6 +103,14 @@ public class GithubRepoMin extends RealmObject implements Parcelable {
 
     public void setPrivate(boolean aPrivate) {
         isPrivate = aPrivate;
+    }
+
+    public int getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(int orgId) {
+        this.orgId = orgId;
     }
 
     public String getOrgName() {
@@ -152,6 +167,7 @@ public class GithubRepoMin extends RealmObject implements Parcelable {
         if (o == null || getClass() != o.getClass()) return false;
         GithubRepoMin that = (GithubRepoMin) o;
         return repoId == that.repoId &&
+                orgId == that.orgId &&
                 isPrivate == that.isPrivate &&
                 isForked == that.isForked &&
                 repoName.equals(that.repoName) &&
@@ -164,7 +180,7 @@ public class GithubRepoMin extends RealmObject implements Parcelable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(repoId, repoName, isPrivate, orgName, orgAvatarUrl, updatedDate, language, description, isForked);
+        return Objects.hash(repoId, repoName, isPrivate, orgId, orgName, orgAvatarUrl, updatedDate, language, description, isForked);
     }
 
     @Override
@@ -177,6 +193,7 @@ public class GithubRepoMin extends RealmObject implements Parcelable {
         dest.writeInt(repoId);
         dest.writeString(repoName);
         dest.writeByte((byte) (isPrivate ? 1 : 0));
+        dest.writeInt(orgId);
         dest.writeString(orgName);
         dest.writeString(orgAvatarUrl);
         dest.writeString(updatedDate);

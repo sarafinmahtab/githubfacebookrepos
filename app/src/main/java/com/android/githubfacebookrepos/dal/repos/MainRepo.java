@@ -16,4 +16,6 @@ public interface MainRepo {
     Single<ArrayList<GithubRepo>> fetchOrganizationReposFromServer(String orgName);
 
     Single<ArrayList<GithubRepoMin>> fetchCachedOrganizationRepos(String orgName);
+
+    void saveOrganizationReposLocally(ArrayList<GithubRepoMin> githubRepoMins);
 }

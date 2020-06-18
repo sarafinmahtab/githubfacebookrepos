@@ -24,6 +24,19 @@ public class MainApplication extends Application {
         MultiDex.install(this);
     }
 
+    /*
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Realm.init(this);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .schemaVersion(AppConstant.DATA_BASE_VERSION)
+                .name(AppConstant.DATA_BASE_NAME)
+                .build();
+        Realm.setDefaultConfiguration(realmConfiguration);
+    }
+    */
+
     @UiThread
     public AppComponent getAppComponent() {
 

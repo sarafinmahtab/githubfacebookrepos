@@ -4,15 +4,20 @@ package com.android.githubfacebookrepos.dal.db;
  * Created by Arafin Mahtab on 6/18/20.
  */
 
-import com.android.githubfacebookrepos.dal.network.ApiService;
+import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
+
+import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 public class LocalDataSourceImpl implements LocalDataSource {
 
     private final String TAG = this.getClass().getName();
 
-    private ApiService apiService;
+    private RealmService realmService;
 
     private LocalDataSourceImpl() {
 
@@ -21,10 +26,21 @@ public class LocalDataSourceImpl implements LocalDataSource {
     /**
      * Inject tells Dagger how to provide instances of this type
      *
-     * @param apiService This instance will be provided by dagger
+     * @param realmService This instance will be provided by dagger
      */
     @Inject
-    public LocalDataSourceImpl(ApiService apiService) {
-        this.apiService = apiService;
+    public LocalDataSourceImpl(RealmService realmService) {
+        this.realmService = realmService;
+    }
+
+    @Override
+    public Flowable<ArrayList<GithubRepoMin>> fetchOrganizationRepos(String orgName) {
+        return Single.just(new ArrayList<GithubRepoMin>()).toFlowable();
+//        return realmService.fetchCachedGithubRepo(orgName);
+    }
+
+    @Override
+    public void saveOrganizationRepos(ArrayList<GithubRepoMin> githubRepoMins) {
+//        realmService.saveOrganizationRepos(githubRepoMins);
     }
 }

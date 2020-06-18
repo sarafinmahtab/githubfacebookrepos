@@ -60,6 +60,11 @@ public class MainRepoImpl implements MainRepo {
      */
     @Override
     public Single<ArrayList<GithubRepoMin>> fetchCachedOrganizationRepos(String orgName) {
-        return null;
+        return localDataSource.fetchOrganizationRepos(orgName).firstOrError();
+    }
+
+    @Override
+    public void saveOrganizationReposLocally(ArrayList<GithubRepoMin> githubRepoMins) {
+        localDataSource.saveOrganizationRepos(githubRepoMins);
     }
 }
