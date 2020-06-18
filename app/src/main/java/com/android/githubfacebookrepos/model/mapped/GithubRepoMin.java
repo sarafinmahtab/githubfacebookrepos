@@ -9,11 +9,15 @@ import android.os.Parcelable;
 
 import java.util.Objects;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Minimized mapped model of Github Repo
  */
-public class GithubRepoMin implements Parcelable {
+public class GithubRepoMin extends RealmObject implements Parcelable {
 
+    @PrimaryKey
     private int repoId;
     private String repoName;
     private boolean isPrivate;
@@ -74,36 +78,72 @@ public class GithubRepoMin implements Parcelable {
         return repoId;
     }
 
+    public void setRepoId(int repoId) {
+        this.repoId = repoId;
+    }
+
     public String getRepoName() {
         return repoName;
+    }
+
+    public void setRepoName(String repoName) {
+        this.repoName = repoName;
     }
 
     public boolean isPrivate() {
         return isPrivate;
     }
 
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
+
     public String getOrgName() {
         return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
     }
 
     public String getOrgAvatarUrl() {
         return orgAvatarUrl;
     }
 
+    public void setOrgAvatarUrl(String orgAvatarUrl) {
+        this.orgAvatarUrl = orgAvatarUrl;
+    }
+
     public String getUpdatedDate() {
         return updatedDate;
+    }
+
+    public void setUpdatedDate(String updatedDate) {
+        this.updatedDate = updatedDate;
     }
 
     public String getLanguage() {
         return language;
     }
 
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public boolean isForked() {
         return isForked;
+    }
+
+    public void setForked(boolean forked) {
+        isForked = forked;
     }
 
     @Override

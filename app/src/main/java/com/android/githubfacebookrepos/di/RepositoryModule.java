@@ -15,7 +15,7 @@ import dagger.Module;
 @Module
 public abstract class RepositoryModule {
 
-    // Makes Dagger provide SharedPreferencesStorage when a Storage type is requested
+    // Makes Dagger provide MainRepoImpl when a MainRepo type is requested
     @Binds
-    public abstract MainRepo provideStorage(MainRepoImpl mainRepo);
+    public abstract MainRepo provideMainRepoImpl(MainRepoImpl mainRepo);
 }

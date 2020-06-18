@@ -31,7 +31,7 @@ public class MainViewModel extends ViewModel {
     }
 
     /**
-     * Decide which usecase will be used to fetch organisation repos
+     * Execute [FetchOrgRepos] use case and observed by orgRepoListLiveData when any response returned
      *
      * @param orgName               organization name as path require to load repositories of that organization
      * @param isConnectionAvailable check connectivity before requesting any network request
@@ -40,29 +40,8 @@ public class MainViewModel extends ViewModel {
 
         orgRepoListLiveData.postValue(ResponseHolder.loading());
 
-        if (AppConstant.offlineModeEnabled && isConnectionAvailable) {
-            fetchGithubReposOnline(new ParamFetchOrgRepo(true, true, orgName));
-        } else {
-            fetchAnyCachedRepos();
-        }
-    }
-
-    /**
-     * Execute [FetchOrgRepos] use case and observed by orgRepoListLiveData when any response returned from online
-     */
-    private void fetchAnyCachedRepos() {
-        //todo offline implementation
-    }
-
-    /**
-     * Execute [FetchOrgRepos] use case and observed by orgRepoListLiveData when any response returned from online
-     *
-     * @param paramFetchOrgRepo param used to fetch org repos
-     */
-    private void fetchGithubReposOnline(ParamFetchOrgRepo paramFetchOrgRepo) {
-
         fetchOrgReposUseCase.execute(
-                paramFetchOrgRepo,
+                new ParamFetchOrgRepo(AppConstant.offlineModeEnabled, isConnectionAvailable, orgName),
                 new DisposableSingleObserver<ResponseHolder<ArrayList<GithubRepoMin>>>() {
                     @Override
                     public void onSuccess(ResponseHolder<ArrayList<GithubRepoMin>> arrayListResponseHolder) {

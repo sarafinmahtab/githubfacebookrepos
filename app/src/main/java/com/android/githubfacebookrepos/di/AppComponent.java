@@ -21,6 +21,7 @@ import dagger.Component;
                 NetworkModule.class,
                 RepositoryModule.class,
                 ViewModelModule.class,
+                AppModule.class,
                 AppSubComponent.class
         }
 )

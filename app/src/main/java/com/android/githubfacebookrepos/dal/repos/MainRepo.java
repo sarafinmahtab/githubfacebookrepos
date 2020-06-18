@@ -5,6 +5,7 @@ package com.android.githubfacebookrepos.dal.repos;
  */
 
 import com.android.githubfacebookrepos.model.api.GithubRepo;
+import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 
 import java.util.ArrayList;
 
@@ -12,5 +13,7 @@ import io.reactivex.Single;
 
 public interface MainRepo {
 
-    Single<ArrayList<GithubRepo>> fetchOrganizationRepos(String orgName);
+    Single<ArrayList<GithubRepo>> fetchOrganizationReposFromServer(String orgName);
+
+    Single<ArrayList<GithubRepoMin>> fetchCachedOrganizationRepos(String orgName);
 }
