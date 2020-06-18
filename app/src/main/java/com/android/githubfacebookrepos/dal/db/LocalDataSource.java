@@ -8,11 +8,12 @@ import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 
 import java.util.ArrayList;
 
-import io.reactivex.Flowable;
+import io.reactivex.Completable;
+import io.reactivex.Single;
 
 public interface LocalDataSource {
 
-    Flowable<ArrayList<GithubRepoMin>> fetchOrganizationRepos(String orgName);
+    Single<ArrayList<GithubRepoMin>> fetchOrganizationRepos(String orgName);
 
-    void saveOrganizationRepos(ArrayList<GithubRepoMin> githubRepoMins);
+    Completable saveOrganizationRepos(ArrayList<GithubRepoMin> githubRepoMins);
 }

@@ -4,12 +4,15 @@ package com.android.githubfacebookrepos.dal.db;
  * Created by Arafin Mahtab on 6/18/20.
  */
 
+import android.util.Log;
+
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
@@ -34,13 +37,22 @@ public class LocalDataSourceImpl implements LocalDataSource {
     }
 
     @Override
-    public Flowable<ArrayList<GithubRepoMin>> fetchOrganizationRepos(String orgName) {
-        return Single.just(new ArrayList<GithubRepoMin>()).toFlowable();
-//        return realmService.fetchCachedGithubRepo(orgName);
+    public Single<ArrayList<GithubRepoMin>> fetchOrganizationRepos(String orgName) {
+        try {
+            return realmService.fetchCachedGithubRepo(orgName);
+        } catch (Exception exception) {
+            Log.w(TAG, exception.toString());
+            return Single.error(exception);
+        }
     }
 
     @Override
-    public void saveOrganizationRepos(ArrayList<GithubRepoMin> githubRepoMins) {
-//        realmService.saveOrganizationRepos(githubRepoMins);
+    public Completable saveOrganizationRepos(ArrayList<GithubRepoMin> githubRepoMins) {
+        try {
+            return realmService.saveOrganizationRepos(githubRepoMins);
+        } catch (Exception exception) {
+            Log.w(TAG, exception.toString());
+            return Completable.error(exception);
+        }
     }
 }

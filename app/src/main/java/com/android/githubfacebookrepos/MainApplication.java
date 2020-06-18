@@ -11,8 +11,12 @@ import android.content.Context;
 import androidx.annotation.UiThread;
 import androidx.multidex.MultiDex;
 
+import com.android.githubfacebookrepos.data.AppConstant;
 import com.android.githubfacebookrepos.di.AppComponent;
 import com.android.githubfacebookrepos.di.DaggerAppComponent;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class MainApplication extends Application {
 
@@ -24,7 +28,6 @@ public class MainApplication extends Application {
         MultiDex.install(this);
     }
 
-    /*
     @Override
     public void onCreate() {
         super.onCreate();
@@ -35,7 +38,6 @@ public class MainApplication extends Application {
                 .build();
         Realm.setDefaultConfiguration(realmConfiguration);
     }
-    */
 
     @UiThread
     public AppComponent getAppComponent() {

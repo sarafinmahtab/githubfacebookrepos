@@ -12,6 +12,7 @@ import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.model.params.ParamFetchOrgRepo;
 import com.android.githubfacebookrepos.usecase.FetchOrgRepos;
+import com.android.githubfacebookrepos.usecase.SaveOrgRepos;
 
 import java.util.ArrayList;
 
@@ -22,12 +23,17 @@ import io.reactivex.observers.DisposableSingleObserver;
 public class MainViewModel extends ViewModel {
 
     private FetchOrgRepos fetchOrgReposUseCase;
+    private SaveOrgRepos saveOrgReposUseCase;
 
     MutableLiveData<ResponseHolder<ArrayList<GithubRepoMin>>> orgRepoListLiveData = new MutableLiveData<>();
 
     @Inject
-    public MainViewModel(FetchOrgRepos fetchOrgRepos) {
+    public MainViewModel(
+            FetchOrgRepos fetchOrgRepos,
+            SaveOrgRepos saveOrgRepos
+    ) {
         this.fetchOrgReposUseCase = fetchOrgRepos;
+        this.saveOrgReposUseCase = saveOrgRepos;
     }
 
     /**
@@ -47,6 +53,10 @@ public class MainViewModel extends ViewModel {
                     public void onSuccess(ResponseHolder<ArrayList<GithubRepoMin>> arrayListResponseHolder) {
                         orgRepoListLiveData.postValue(arrayListResponseHolder);
 
+                        if (isConnectionAvailable) {
+                            saveOrgReposUseCase.execute(arrayListResponseHolder.getData());
+                        }
+
                         dispose();
                     }
 
@@ -64,6 +74,7 @@ public class MainViewModel extends ViewModel {
 
         // Disposing All UseCases before ViewModel is cleared
         fetchOrgReposUseCase.dispose();
+        saveOrgReposUseCase.dispose();
 
         super.onCleared();
     }

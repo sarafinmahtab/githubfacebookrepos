@@ -4,6 +4,8 @@ package com.android.githubfacebookrepos.dal.repos;
  * Created by Arafin Mahtab on 6/16/20.
  */
 
+import android.util.Log;
+
 import com.android.githubfacebookrepos.dal.db.LocalDataSource;
 import com.android.githubfacebookrepos.dal.network.RemoteDataSource;
 import com.android.githubfacebookrepos.model.api.GithubRepo;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 
@@ -60,11 +63,21 @@ public class MainRepoImpl implements MainRepo {
      */
     @Override
     public Single<ArrayList<GithubRepoMin>> fetchCachedOrganizationRepos(String orgName) {
-        return localDataSource.fetchOrganizationRepos(orgName).firstOrError();
+        try {
+            return localDataSource.fetchOrganizationRepos(orgName);
+        } catch (Exception e) {
+            Log.w(TAG, e.toString());
+            return Single.error(e);
+        }
     }
 
     @Override
-    public void saveOrganizationReposLocally(ArrayList<GithubRepoMin> githubRepoMins) {
-        localDataSource.saveOrganizationRepos(githubRepoMins);
+    public Completable saveOrganizationReposLocally(ArrayList<GithubRepoMin> githubRepoMins) {
+        try {
+            return localDataSource.saveOrganizationRepos(githubRepoMins);
+        } catch (Exception e) {
+            Log.w(TAG, e.toString());
+            return Completable.error(e);
+        }
     }
 }

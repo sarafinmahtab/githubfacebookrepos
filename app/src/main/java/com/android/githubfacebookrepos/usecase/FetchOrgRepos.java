@@ -62,9 +62,6 @@ public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHold
                                         githubRepo.isFork())
                                 ).collect(Collectors.toCollection(ArrayList::new));
 
-                        // Saving latest data fetched from server
-                        mainRepo.saveOrganizationReposLocally(githubRepoMinArrayList);
-
                         return ResponseHolder.success(githubRepoMinArrayList);
                     })
                     .onErrorReturn(throwable -> {
@@ -83,7 +80,8 @@ public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHold
             // Loading cached GithubRepoMin data as there is no available internet connection
 
             return mainRepo.fetchCachedOrganizationRepos(paramFetchOrgRepo.getOrgName())
-                    .map(ResponseHolder::success);
+                    .map(ResponseHolder::success)
+                    .onErrorReturn(ResponseHolder::error);
         }
     }
 }

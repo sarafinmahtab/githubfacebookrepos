@@ -4,16 +4,18 @@ package com.android.githubfacebookrepos.dal.db;
  * Created by Arafin Mahtab on 6/18/20.
  */
 
+import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
+
+import java.util.ArrayList;
+
 import javax.inject.Inject;
+
+import io.reactivex.Completable;
+import io.reactivex.Single;
+import io.realm.Realm;
 
 public class RealmService {
 
-    @Inject
-    public RealmService() {
-
-    }
-
-/*
     private Realm realm;
 
     @Inject
@@ -21,20 +23,33 @@ public class RealmService {
         this.realm = realm;
     }
 
-    public Flowable<ArrayList<GithubRepoMin>> fetchCachedGithubRepo(String orgName) {
+    public Single<ArrayList<GithubRepoMin>> fetchCachedGithubRepo(String orgName) {
 
-        return realm.asFlowable()
-                .map(realm -> new ArrayList<>(realm.where(GithubRepoMin.class)
-                        .like("Login", orgName)
-                        .findAll())
-                );
+        try {
+            return Single.just(new ArrayList<>(realm.where(GithubRepoMin.class)
+                    .findAll()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Single.error(e);
+        }
     }
 
-    public void saveOrganizationRepos(ArrayList<GithubRepoMin> githubRepoMins) {
-        realm.executeTransactionAsync(realm -> {
-            realm.insertOrUpdate(githubRepoMins);
-        });
+    public Completable saveOrganizationRepos(ArrayList<GithubRepoMin> githubRepoMins) {
+        try {
+            return Completable.create(
+                    emitter -> realm.executeTransaction(
+                            realm -> realm.insertOrUpdate(githubRepoMins)
+                    )
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Completable.error(e);
+        }
     }
 
- */
+    public void close() {
+        if (!realm.isClosed()) {
+            realm.close();
+        }
+    }
 }

@@ -9,6 +9,7 @@ import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 
 import java.util.ArrayList;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 public interface MainRepo {
@@ -17,5 +18,5 @@ public interface MainRepo {
 
     Single<ArrayList<GithubRepoMin>> fetchCachedOrganizationRepos(String orgName);
 
-    void saveOrganizationReposLocally(ArrayList<GithubRepoMin> githubRepoMins);
+    Completable saveOrganizationReposLocally(ArrayList<GithubRepoMin> githubRepoMins);
 }

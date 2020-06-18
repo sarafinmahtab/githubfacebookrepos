@@ -27,11 +27,11 @@ public final class CommonUtil {
     public static String prepareErrorMessage(Throwable throwable) {
 
         if (throwable instanceof LocalException) {
-            return ((LocalException) throwable).getMessage();
+            return throwable.getMessage();
         } else if (throwable instanceof ServerException) {
-            return ((ServerException) throwable).getMessage();
+            return throwable.getMessage();
         } else if (throwable instanceof NetworkException) {
-            return ((NetworkException) throwable).getMessage();
+            return throwable.getMessage();
         } else {
             return throwable.getMessage();
         }
