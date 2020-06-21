@@ -100,19 +100,39 @@
             tools:visibility="visible" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/modifiedDateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:paddingStart="12dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="12dp"
+            android:text="@{repoNote.dateFormatted}"
+            android:textColor="@color/textColor"
+            android:textStyle="italic"
+            android:visibility="@{repoNote.note == null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="@+id/noteTextView"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/noteTextView"
+            app:layout_constraintTop_toBottomOf="@+id/noteTextView"
+            tools:text="Updated 14:90 12 June '20"
+            tools:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/startAddNoteTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
+            android:layout_margin="12dp"
+            android:background="@drawable/bg_add_update_note_selection"
             android:drawableEnd="@drawable/ic_edit"
             android:drawablePadding="4dp"
-            android:padding="12dp"
+            android:padding="8dp"
             android:text="@{repoNote.note == null ? @string/add_note : @string/edit_note}"
             android:textColor="@color/textColorLight"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="@+id/repoDescTextView"
             app:layout_constraintStart_toStartOf="@+id/repoDescTextView"
-            app:layout_constraintTop_toBottomOf="@+id/noteTextView"
+            app:layout_constraintTop_toBottomOf="@+id/modifiedDateTextView"
             tools:text="@string/edit_note" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

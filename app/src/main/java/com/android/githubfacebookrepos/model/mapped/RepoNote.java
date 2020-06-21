@@ -7,19 +7,30 @@ package com.android.githubfacebookrepos.model.mapped;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.android.githubfacebookrepos.helpers.DateUtils;
+
+import java.util.UUID;
+
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.Index;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Repo Note model keeps note corresponding to repoId
  * <p>
  * Annotation @Index will add a search index to the field.
  * A search index will make the Realm file larger and inserts slower but queries will be faster.
  */
-public class RepoNote implements Parcelable {
+public class RepoNote extends RealmObject implements Parcelable {
 
-    //    @PrimaryKey
+    @PrimaryKey
     private String noteId;
     private String note;
     private long dateUpdated;
-    //    @Index
+    @Ignore
+    private String dateFormatted;
+    @Index
     private int repoId;
 
 
@@ -29,10 +40,21 @@ public class RepoNote implements Parcelable {
     public RepoNote() {
     }
 
-    public RepoNote(String noteId, String note, long dateUpdated, int repoId) {
+    public RepoNote(String note, long dateUpdated, int repoId) {
+        this(
+                UUID.randomUUID().toString(),
+                note,
+                dateUpdated,
+                DateUtils.getDateStringByFormat(dateUpdated, DateUtils.DATE_FORMAT),
+                repoId
+        );
+    }
+
+    public RepoNote(String noteId, String note, long dateUpdated, String dateFormatted, int repoId) {
         this.noteId = noteId;
         this.note = note;
         this.dateUpdated = dateUpdated;
+        this.dateFormatted = dateFormatted;
         this.repoId = repoId;
     }
 
@@ -40,6 +62,7 @@ public class RepoNote implements Parcelable {
         noteId = in.readString();
         note = in.readString();
         dateUpdated = in.readLong();
+        dateFormatted = in.readString();
         repoId = in.readInt();
     }
 
@@ -79,6 +102,14 @@ public class RepoNote implements Parcelable {
         this.dateUpdated = dateUpdated;
     }
 
+    public String getDateFormatted() {
+        return dateFormatted;
+    }
+
+    public void setDateFormatted(String dateFormatted) {
+        this.dateFormatted = dateFormatted;
+    }
+
     public int getRepoId() {
         return repoId;
     }
@@ -97,6 +128,7 @@ public class RepoNote implements Parcelable {
         dest.writeString(noteId);
         dest.writeString(note);
         dest.writeLong(dateUpdated);
+        dest.writeString(dateFormatted);
         dest.writeInt(repoId);
     }
 }

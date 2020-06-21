@@ -109,12 +109,8 @@ public class AddUpdateNoteActivity extends AppCompatActivity implements View.OnC
 
     private void setUpToolbar() {
         if (getSupportActionBar() != null) {
-
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-            if (githubRepoMin != null) {
-                getSupportActionBar().setTitle(githubRepoMin.getRepoName());
-            }
+            getSupportActionBar().setTitle(getString(R.string.title_notes));
         }
     }
 

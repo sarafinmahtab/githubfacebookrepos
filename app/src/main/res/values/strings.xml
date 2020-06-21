@@ -7,4 +7,6 @@
     <string name="edit_note">Edit This Note</string>
 
     <string name="empty_note_error">You should not add any empty note</string>
+
+    <string name="title_notes">Notes</string>
 </resources>
