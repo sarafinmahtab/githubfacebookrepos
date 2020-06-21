@@ -31,7 +31,7 @@ public class SaveOrgRepos extends CompletableUseCase<ArrayList<GithubRepoMin>> {
 
     @Inject
     public SaveOrgRepos(MainRepo mainRepo) {
-        // Telling rx java to load this use case with IO thread and
+        // Telling rx java to load this use case with looper of current thread and
         // by default observe on main thread.
         threadExecutorScheduler = WorkScheduler.with(Looper.myLooper());
 

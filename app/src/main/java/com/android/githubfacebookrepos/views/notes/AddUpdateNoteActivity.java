@@ -3,11 +3,12 @@ package com.android.githubfacebookrepos.views.notes;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.githubfacebookrepos.MainApplication;
@@ -15,7 +16,10 @@ import com.android.githubfacebookrepos.R;
 import com.android.githubfacebookrepos.data.AppConstant;
 import com.android.githubfacebookrepos.databinding.ActivityAddUpdateNoteBinding;
 import com.android.githubfacebookrepos.di.ViewModelFactory;
+import com.android.githubfacebookrepos.helpers.CommonUtil;
+import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
+import com.android.githubfacebookrepos.model.mapped.RepoNote;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -47,6 +51,7 @@ public class AddUpdateNoteActivity extends AppCompatActivity implements View.OnC
     ViewModelFactory viewModelFactory;
 
 
+    private RepoNote repoNote;
     private GithubRepoMin githubRepoMin;
 
 
@@ -85,7 +90,38 @@ public class AddUpdateNoteActivity extends AppCompatActivity implements View.OnC
                 .into(binding.avatarImageView);
 
         binding.startAddNoteTextView.setOnClickListener(this);
+
+
+        viewModel.repoNoteLiveData.observe(this, repoNoteObserver);
+
+
+        viewModel.fetchRepoNote(githubRepoMin.getRepoId());
     }
+
+    private Observer<ResponseHolder<RepoNote>> repoNoteObserver = new Observer<ResponseHolder<RepoNote>>() {
+        @Override
+        public void onChanged(ResponseHolder<RepoNote> repoNoteResponseHolder) {
+            switch (repoNoteResponseHolder.getStatus()) {
+
+                case LOADING:
+
+                    // Show a loader view if need
+
+                    break;
+                case SUCCESS:
+                    binding.setRepoNote(repoNoteResponseHolder.getData());
+                    repoNote = repoNoteResponseHolder.getData();
+
+                    break;
+                case ERROR:
+
+                    String warningMessage = CommonUtil.prepareErrorMessage(repoNoteResponseHolder.getError());
+                    Log.w(TAG, warningMessage);
+
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onClick(View v) {
@@ -95,16 +131,17 @@ public class AddUpdateNoteActivity extends AppCompatActivity implements View.OnC
     }
 
     private void openAddNoteDialog() {
-        AddNoteDialog addNoteDialog = AddNoteDialog.getInstance(this, null);
+        AddNoteDialog addNoteDialog = AddNoteDialog.getInstance(
+                this,
+                repoNote != null ? repoNote.getNoteId() : null,
+                repoNote != null ? repoNote.getNote() : null
+        );
         addNoteDialog.show(getSupportFragmentManager(), addNoteDialog.TAG);
     }
 
     @Override
-    public void onAddNote(String note) {
-
-        Toast.makeText(this, note, Toast.LENGTH_LONG).show();
-
-        viewModel.addOrUpdateNote(note);
+    public void onAddNote(String noteId, String note) {
+        viewModel.addUpdateNote(noteId, note, githubRepoMin.getRepoId());
     }
 
     private void setUpToolbar() {
@@ -118,5 +155,13 @@ public class AddUpdateNoteActivity extends AppCompatActivity implements View.OnC
     public boolean onSupportNavigateUp() {
         super.onBackPressed();
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        viewModel.repoNoteLiveData.removeObserver(repoNoteObserver);
+
+        super.onDestroy();
     }
 }

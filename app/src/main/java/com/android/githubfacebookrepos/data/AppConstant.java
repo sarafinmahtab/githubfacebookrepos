@@ -10,6 +10,7 @@ public final class AppConstant {
     public static final String DATA_BASE_NAME = "appdb.realm";
 
     public static final String ORG_NAME_FIELD = "orgName";
+    public static final String REPO_ID_FIELD = "repoId";
 
     public static final int GLIDE_ITEM_IMAGE_SIZE = 100;
 

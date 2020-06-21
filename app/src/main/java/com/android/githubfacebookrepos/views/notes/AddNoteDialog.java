@@ -12,20 +12,28 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.DialogFragment;
 
 import com.android.githubfacebookrepos.R;
 import com.android.githubfacebookrepos.databinding.DialogAddNoteBinding;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-public class AddNoteDialog extends DialogFragment {
+import java.util.UUID;
 
+public class AddNoteDialog extends BottomSheetDialogFragment {
+
+    private static final String EXTRA_CURRENT_NOTE_ID = "CurrentNoteId";
     private static final String EXTRA_CURRENT_NOTE = "CurrentNote";
 
-    public static AddNoteDialog getInstance(AddNoteListener addNoteListener, @Nullable String currentNote) {
+    public static AddNoteDialog getInstance(
+            AddNoteListener addNoteListener,
+            @Nullable String currentNoteId,
+            @Nullable String currentNote
+    ) {
         AddNoteDialog dialog = new AddNoteDialog(addNoteListener);
 
-        if (currentNote != null) {
+        if (currentNoteId != null) {
             Bundle bundle = new Bundle();
+            bundle.putString(EXTRA_CURRENT_NOTE_ID, currentNoteId);
             bundle.putString(EXTRA_CURRENT_NOTE, currentNote);
             dialog.setArguments(bundle);
         }
@@ -35,11 +43,12 @@ public class AddNoteDialog extends DialogFragment {
 
     public final String TAG = this.getClass().getName();
 
+    private String noteId;
+    private String currentNote;
+
     private DialogAddNoteBinding binding;
 
     private AddNoteListener addNoteListener;
-
-    private String currentNote;
 
     public AddNoteDialog(AddNoteListener addNoteListener) {
         this.addNoteListener = addNoteListener;
@@ -49,17 +58,25 @@ public class AddNoteDialog extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        currentNote = getArguments() != null ? getArguments().getString(EXTRA_CURRENT_NOTE) : "";
+        if (getArguments() != null) {
+            noteId = getArguments().getString(EXTRA_CURRENT_NOTE_ID);
+            currentNote = getArguments().getString(EXTRA_CURRENT_NOTE);
+        }
+
+        noteId = (noteId == null || noteId.isEmpty()) ? UUID.randomUUID().toString() : noteId;
+        currentNote = (currentNote == null || currentNote.isEmpty()) ? "" : currentNote;
+
 
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_add_note, container, false);
         binding.noteEditText.setText(currentNote);
 
         binding.addNoteImageView.setOnClickListener(v -> {
-            String note = binding.noteEditText.getText() != null ? binding.noteEditText.getText().toString() : null;
+            String note = binding.noteEditText.getText() != null ? binding.noteEditText.getText().toString() : currentNote;
             if (note == null || note.isEmpty()) {
                 binding.noteEditText.setError(getString(R.string.empty_note_error));
             } else {
-                addNoteListener.onAddNote(note);
+                addNoteListener.onAddNote(noteId, note);
+                dismiss();
             }
         });
 
@@ -67,6 +84,6 @@ public class AddNoteDialog extends DialogFragment {
     }
 
     public interface AddNoteListener {
-        void onAddNote(String note);
+        void onAddNote(String note, String noteId);
     }
 }

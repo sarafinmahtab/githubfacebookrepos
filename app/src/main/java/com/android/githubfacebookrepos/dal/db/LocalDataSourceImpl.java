@@ -7,13 +7,16 @@ package com.android.githubfacebookrepos.dal.db;
 import android.util.Log;
 
 import com.android.githubfacebookrepos.di.AppScope;
+import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
+import com.android.githubfacebookrepos.model.mapped.RepoNote;
 
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 /**
@@ -24,7 +27,7 @@ public class LocalDataSourceImpl implements LocalDataSource {
 
     private final String TAG = this.getClass().getName();
 
-    private RealmService realmService;
+    private RealmRxService realmRxService;
 
     private LocalDataSourceImpl() {
 
@@ -33,17 +36,17 @@ public class LocalDataSourceImpl implements LocalDataSource {
     /**
      * Inject tells Dagger how to provide instances of this type
      *
-     * @param realmService This instance will be provided by dagger
+     * @param realmRxService This instance will be provided by dagger
      */
     @Inject
-    public LocalDataSourceImpl(RealmService realmService) {
-        this.realmService = realmService;
+    public LocalDataSourceImpl(RealmRxService realmRxService) {
+        this.realmRxService = realmRxService;
     }
 
     @Override
     public Single<ArrayList<GithubRepoMin>> fetchOrganizationRepos(String orgName) {
         try {
-            return realmService.fetchCachedGithubRepo(orgName);
+            return realmRxService.fetchCachedGithubRepo(orgName);
         } catch (Exception exception) {
             Log.w(TAG, exception.toString());
             return Single.error(exception);
@@ -53,10 +56,30 @@ public class LocalDataSourceImpl implements LocalDataSource {
     @Override
     public Completable saveOrganizationRepos(ArrayList<GithubRepoMin> githubRepoMins) {
         try {
-            return realmService.saveOrganizationRepos(githubRepoMins);
+            return realmRxService.saveOrganizationRepos(githubRepoMins);
         } catch (Exception exception) {
             Log.w(TAG, exception.toString());
             return Completable.error(exception);
+        }
+    }
+
+    @Override
+    public Single<ResponseHolder<RepoNote>> addUpdateNoteForRepo(RepoNote repoNote) {
+        try {
+            return realmRxService.addUpdateNote(repoNote);
+        } catch (Exception exception) {
+            Log.w(TAG, exception.toString());
+            return Single.error(exception);
+        }
+    }
+
+    @Override
+    public Observable<ResponseHolder<RepoNote>> fetchRepoNote(int repoId) {
+        try {
+            return realmRxService.fetchRepoNote(repoId);
+        } catch (Exception exception) {
+            Log.w(TAG, exception.toString());
+            return Observable.error(exception);
         }
     }
 }

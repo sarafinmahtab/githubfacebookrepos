@@ -28,7 +28,6 @@ public class RepoNote extends RealmObject implements Parcelable {
     private String noteId;
     private String note;
     private long dateUpdated;
-    @Ignore
     private String dateFormatted;
     @Index
     private int repoId;
@@ -40,9 +39,9 @@ public class RepoNote extends RealmObject implements Parcelable {
     public RepoNote() {
     }
 
-    public RepoNote(String note, long dateUpdated, int repoId) {
+    public RepoNote(String noteId, String note, long dateUpdated, int repoId) {
         this(
-                UUID.randomUUID().toString(),
+                noteId,
                 note,
                 dateUpdated,
                 DateUtils.getDateStringByFormat(dateUpdated, DateUtils.DATE_FORMAT),
