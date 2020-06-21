@@ -5,7 +5,8 @@
     <color name="colorAccent">#283593</color>
 
     <color name="textColor">#283593</color>
-    <color name="textColorLight">#4E4E4E</color>
+    <color name="textColorBlack">#272727</color>
+    <color name="textColorLight">#838383</color>
 
     <color name="lineColor">#E4D1CFCF</color>
 

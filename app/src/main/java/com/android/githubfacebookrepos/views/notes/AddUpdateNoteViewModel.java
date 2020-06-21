@@ -14,4 +14,8 @@ public class AddUpdateNoteViewModel extends ViewModel {
     public AddUpdateNoteViewModel() {
 
     }
+
+    public void addOrUpdateNote(String note) {
+
+    }
 }

@@ -2,4 +2,9 @@
     <string name="app_name">Github Facebook Repos</string>
 
     <string name="repo_by_org">by %s</string>
+
+    <string name="add_note">Add Note Here</string>
+    <string name="edit_note">Edit This Note</string>
+
+    <string name="empty_note_error">You should not add any empty note</string>
 </resources>
