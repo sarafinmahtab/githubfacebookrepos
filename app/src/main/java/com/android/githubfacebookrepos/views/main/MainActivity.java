@@ -19,12 +19,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android.githubfacebookrepos.MainApplication;
 import com.android.githubfacebookrepos.R;
+import com.android.githubfacebookrepos.base.ItemClickListener;
 import com.android.githubfacebookrepos.databinding.ActivityMainBinding;
 import com.android.githubfacebookrepos.di.ViewModelFactory;
 import com.android.githubfacebookrepos.helpers.CommonUtil;
 import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.views.main.adapter.GitReposAdapter;
+import com.android.githubfacebookrepos.views.notes.AddUpdateNoteActivity;
 
 import java.util.ArrayList;
 
@@ -34,20 +36,21 @@ import javax.inject.Inject;
 /**
  * Activity which will show the list of Github facebook repos
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ItemClickListener {
 
     private final String TAG = this.getClass().getName();
 
+    public static final int REPO_CLICKED = 0;
+
     private String orgRepoName = "facebook";
 
+
+    private GitReposAdapter adapter;
+    private ActivityMainBinding binding;
     private MainViewModel viewModel;
 
     @Inject
     ViewModelFactory viewModelFactory;
-
-    private GitReposAdapter adapter;
-
-    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         // Initializing viewModel from injected ViewModelFactory
         viewModel = new ViewModelProvider(this, viewModelFactory).get(MainViewModel.class);
 
-        adapter = new GitReposAdapter();
+        adapter = new GitReposAdapter(this);
 
         // Initializing Views with DataBinding
         binding.gitRepoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -76,6 +79,13 @@ public class MainActivity extends AppCompatActivity {
         viewModel.fetchGithubRepos(orgRepoName, CommonUtil.isNetworkConnectionAvailable(this));
     }
 
+    @Override
+    public void onItemClick(int position, int viewType, int actionType, Object value) {
+        if (actionType == MainActivity.REPO_CLICKED) {
+            GithubRepoMin githubRepoMin = (GithubRepoMin) value;
+            AddUpdateNoteActivity.start(this, githubRepoMin);
+        }
+    }
 
     private Observer<ResponseHolder<ArrayList<GithubRepoMin>>> orgRepoListObserver = orgRepoListResponseHolder -> {
         switch (orgRepoListResponseHolder.getStatus()) {

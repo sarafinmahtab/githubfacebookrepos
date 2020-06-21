@@ -8,6 +8,7 @@ package com.android.githubfacebookrepos.di;
 import android.content.Context;
 
 import com.android.githubfacebookrepos.views.main.MainComponent;
+import com.android.githubfacebookrepos.views.notes.AddUpdateNoteComponent;
 
 import dagger.BindsInstance;
 import dagger.Component;
@@ -39,4 +40,6 @@ public interface AppComponent {
 
     // Types that can be retrieved from the graph
     MainComponent.Factory mainComponent();
+
+    AddUpdateNoteComponent.Factory addUpdateNoteComponent();
 }

@@ -9,6 +9,7 @@ import com.android.githubfacebookrepos.base.BaseViewHolder;
 import com.android.githubfacebookrepos.data.AppConstant;
 import com.android.githubfacebookrepos.databinding.ItemGitRepoBinding;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
+import com.android.githubfacebookrepos.views.main.MainActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -37,5 +38,10 @@ public class GitRepoViewHolder extends BaseViewHolder {
 
         binding.setGitRepoMin(githubRepoMin);
         binding.executePendingBindings();
+
+
+        getItemView().setOnClickListener(v -> {
+            getItemClickListener().onItemClick(getAdapterPosition(), getViewType(), MainActivity.REPO_CLICKED, githubRepoMin);
+        });
     }
 }

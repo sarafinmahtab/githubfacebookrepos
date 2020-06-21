@@ -13,6 +13,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
     private View itemView;
     private int viewType;
+    private ItemClickListener itemClickListener;
 
     public BaseViewHolder(View itemView, int viewType) {
         super(itemView);
@@ -30,5 +31,13 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
     public int getViewType() {
         return viewType;
+    }
+
+    public ItemClickListener getItemClickListener() {
+        return itemClickListener;
+    }
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
     }
 }

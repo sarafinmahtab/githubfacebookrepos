@@ -79,7 +79,7 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="10dp"
-            android:background="@color/lineColor"
+            android:background="@{gitRepoMin.forked ? @color/backgroundColor : @color/lineColor}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
