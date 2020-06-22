@@ -50,12 +50,12 @@ public class MainViewModel extends ViewModel {
                 new ParamFetchOrgRepo(AppConstant.offlineModeEnabled, isConnectionAvailable, orgName),
                 new DisposableSingleObserver<ResponseHolder<ArrayList<GithubRepoMin>>>() {
                     @Override
-                    public void onSuccess(ResponseHolder<ArrayList<GithubRepoMin>> arrayListResponseHolder) {
-                        orgRepoListLiveData.postValue(arrayListResponseHolder);
+                    public void onSuccess(ResponseHolder<ArrayList<GithubRepoMin>> gitRepoListResponseHolder) {
+                        orgRepoListLiveData.postValue(gitRepoListResponseHolder);
 
                         if (AppConstant.offlineModeEnabled && isConnectionAvailable) {
                             // Saving latest data fetched from server
-                            saveOrgReposUseCase.execute(arrayListResponseHolder.getData());
+                            saveOrgReposUseCase.execute(gitRepoListResponseHolder.getData());
                         }
 
                         dispose();

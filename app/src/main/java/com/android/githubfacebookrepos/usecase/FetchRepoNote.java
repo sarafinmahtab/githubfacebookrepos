@@ -5,9 +5,11 @@ package com.android.githubfacebookrepos.usecase;
  */
 
 import android.os.Looper;
+import android.util.Log;
 
 import com.android.githubfacebookrepos.base.ObservableUseCase;
 import com.android.githubfacebookrepos.dal.repos.MainRepo;
+import com.android.githubfacebookrepos.helpers.CommonUtil;
 import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.mapped.RepoNote;
 import com.android.githubfacebookrepos.worker.WorkScheduler;
@@ -33,6 +35,12 @@ public class FetchRepoNote extends ObservableUseCase<Integer, ResponseHolder<Rep
 
     @Override
     protected Observable<ResponseHolder<RepoNote>> buildUseCaseObservable(Integer integer) {
-        return mainRepo.fetchRepoNote(integer);
+        try {
+            return mainRepo.fetchRepoNote(integer);
+        } catch (Exception e) {
+            String error = CommonUtil.prepareErrorMessage(e);
+            Log.w(TAG, error);
+            return Observable.just(ResponseHolder.error(e));
+        }
     }
 }

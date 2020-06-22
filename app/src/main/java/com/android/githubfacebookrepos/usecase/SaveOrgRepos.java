@@ -42,11 +42,18 @@ public class SaveOrgRepos extends CompletableUseCase<ArrayList<GithubRepoMin>> {
     @Override
     protected Completable buildUseCaseCompletable(ArrayList<GithubRepoMin> githubRepoMins) {
 
-        return mainRepo.saveOrganizationReposLocally(githubRepoMins)
-                .onErrorComplete(throwable -> {
-                    String error = CommonUtil.prepareErrorMessage(throwable);
-                    Log.w(TAG, error);
-                    return false;
-                });
+        try {
+            return mainRepo.saveOrganizationReposLocally(githubRepoMins)
+                    .onErrorComplete(throwable -> {
+                        String error = CommonUtil.prepareErrorMessage(throwable);
+                        Log.w(TAG, error);
+                        return true;
+                    });
+
+        } catch (Exception e) {
+            String error = CommonUtil.prepareErrorMessage(e);
+            Log.w(TAG, error);
+            return Completable.error(e);
+        }
     }
 }

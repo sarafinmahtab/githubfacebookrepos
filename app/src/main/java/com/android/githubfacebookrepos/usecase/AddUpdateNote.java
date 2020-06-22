@@ -5,9 +5,11 @@ package com.android.githubfacebookrepos.usecase;
  */
 
 import android.os.Looper;
+import android.util.Log;
 
 import com.android.githubfacebookrepos.base.SingleUseCase;
 import com.android.githubfacebookrepos.dal.repos.MainRepo;
+import com.android.githubfacebookrepos.helpers.CommonUtil;
 import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.mapped.RepoNote;
 import com.android.githubfacebookrepos.worker.WorkScheduler;
@@ -17,6 +19,8 @@ import javax.inject.Inject;
 import io.reactivex.Single;
 
 public class AddUpdateNote extends SingleUseCase<RepoNote, ResponseHolder<RepoNote>> {
+
+    private final String TAG = this.getClass().getName();
 
     private MainRepo mainRepo;
 
@@ -31,6 +35,12 @@ public class AddUpdateNote extends SingleUseCase<RepoNote, ResponseHolder<RepoNo
 
     @Override
     protected Single<ResponseHolder<RepoNote>> buildUseCaseSingle(RepoNote repoNote) {
-        return mainRepo.addUpdateNoteForRepo(repoNote);
+        try {
+            return mainRepo.addUpdateNoteForRepo(repoNote);
+        } catch (Exception e) {
+            String error = CommonUtil.prepareErrorMessage(e);
+            Log.w(TAG, error);
+            return Single.just(ResponseHolder.error(e));
+        }
     }
 }

@@ -26,14 +26,16 @@ public final class CommonUtil {
 
     public static String prepareErrorMessage(Throwable throwable) {
 
+        String errorMessage = throwable.getMessage() == null ? throwable.toString() : throwable.getMessage();
+
         if (throwable instanceof LocalException) {
-            return throwable.getMessage();
+            return errorMessage;
         } else if (throwable instanceof ServerException) {
-            return throwable.getMessage();
+            return errorMessage;
         } else if (throwable instanceof NetworkException) {
-            return throwable.getMessage();
+            return errorMessage;
         } else {
-            return throwable.getMessage();
+            return errorMessage;
         }
     }
 

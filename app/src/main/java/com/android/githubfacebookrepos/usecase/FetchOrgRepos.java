@@ -4,6 +4,8 @@ package com.android.githubfacebookrepos.usecase;
  * Created by Arafin Mahtab on 6/16/20.
  */
 
+import android.util.Log;
+
 import com.android.githubfacebookrepos.base.SingleUseCase;
 import com.android.githubfacebookrepos.dal.repos.MainRepo;
 import com.android.githubfacebookrepos.helpers.CommonUtil;
@@ -27,6 +29,8 @@ import retrofit2.HttpException;
  */
 public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHolder<ArrayList<GithubRepoMin>>> {
 
+    private final String TAG = this.getClass().getName();
+
     private MainRepo mainRepo;
 
     @Inject
@@ -41,47 +45,54 @@ public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHold
     @Override
     protected Single<ResponseHolder<ArrayList<GithubRepoMin>>> buildUseCaseSingle(ParamFetchOrgRepo paramFetchOrgRepo) {
 
-        if (paramFetchOrgRepo.isShouldCacheResponse() && paramFetchOrgRepo.isNetworkConnectionAvailable()) {
+        try {
+            if (paramFetchOrgRepo.isShouldCacheResponse() && paramFetchOrgRepo.isNetworkConnectionAvailable()) {
 
-            // Loading GithubRepo Data from server and mapped to secondary object GithubRepoMin
+                // Loading GithubRepo Data from server and mapped to secondary object GithubRepoMin
 
-            return mainRepo.fetchOrganizationReposFromServer(paramFetchOrgRepo.getOrgName())
-                    .map(githubRepos -> {
+                return mainRepo.fetchOrganizationReposFromServer(paramFetchOrgRepo.getOrgName())
+                        .map(githubRepos -> {
 
-                        ArrayList<GithubRepoMin> githubRepoMinArrayList = githubRepos.stream()
-                                .map(githubRepo -> new GithubRepoMin(
-                                        githubRepo.getId(),
-                                        githubRepo.getName(),
-                                        githubRepo.isPrivate(),
-                                        githubRepo.getOwner().getId(),
-                                        githubRepo.getOwner().getLogin(),
-                                        githubRepo.getOwner().getAvatarUrl(),
-                                        githubRepo.getUpdatedAt(),
-                                        githubRepo.getLanguage(),
-                                        githubRepo.getDescription(),
-                                        githubRepo.isFork())
-                                ).collect(Collectors.toCollection(ArrayList::new));
+                            ArrayList<GithubRepoMin> githubRepoMinArrayList = githubRepos.stream()
+                                    .map(githubRepo -> new GithubRepoMin(
+                                            githubRepo.getId(),
+                                            githubRepo.getName(),
+                                            githubRepo.isPrivate(),
+                                            githubRepo.getOwner().getId(),
+                                            githubRepo.getOwner().getLogin(),
+                                            githubRepo.getOwner().getAvatarUrl(),
+                                            githubRepo.getUpdatedAt(),
+                                            githubRepo.getLanguage(),
+                                            githubRepo.getDescription(),
+                                            githubRepo.isFork())
+                                    ).collect(Collectors.toCollection(ArrayList::new));
 
-                        return ResponseHolder.success(githubRepoMinArrayList);
-                    })
-                    .onErrorReturn(throwable -> {
+                            return ResponseHolder.success(githubRepoMinArrayList);
+                        })
+                        .onErrorReturn(throwable -> {
 
-                        if (throwable instanceof HttpException) {
-                            return ResponseHolder.error(
-                                    CommonUtil.prepareErrorResult(
-                                            ((HttpException) throwable).code(),
-                                            ((HttpException) throwable).message()
-                                    ));
-                        } else {
-                            return ResponseHolder.error(throwable);
-                        }
-                    });
-        } else {
-            // Loading cached GithubRepoMin data as there is no available internet connection
+                            if (throwable instanceof HttpException) {
+                                return ResponseHolder.error(
+                                        CommonUtil.prepareErrorResult(
+                                                ((HttpException) throwable).code(),
+                                                ((HttpException) throwable).message()
+                                        ));
+                            } else {
+                                return ResponseHolder.error(throwable);
+                            }
+                        });
+            } else {
+                // Loading cached GithubRepoMin data as there is no available internet connection
 
-            return mainRepo.fetchCachedOrganizationRepos(paramFetchOrgRepo.getOrgName())
-                    .map(ResponseHolder::success)
-                    .onErrorReturn(ResponseHolder::error);
+                return mainRepo.fetchCachedOrganizationRepos(paramFetchOrgRepo.getOrgName())
+                        .map(ResponseHolder::success)
+                        .onErrorReturn(ResponseHolder::error);
+            }
+
+        } catch (Exception e) {
+            String error = CommonUtil.prepareErrorMessage(e);
+            Log.w(TAG, error);
+            return Single.just(ResponseHolder.error(e));
         }
     }
 }
