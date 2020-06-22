@@ -45,4 +45,16 @@ public abstract class SingleUseCase<Params, Results> extends BaseReactiveUseCase
         Single<Results> single = buildUseCaseSingleWithSchedulers(params);
         addDisposable(single.subscribeWith(observer));
     }
+
+
+    /**
+     * Executes the current use case immediately using blockingGet().
+     *
+     * @param params Parameters (Optional) used to build/execute this use case.
+     */
+    public Results executeImmediate(Params params) {
+        Single<Results> single = buildUseCaseSingleWithSchedulers(params);
+        addDisposable(single.subscribe());
+        return single.blockingGet();
+    }
 }

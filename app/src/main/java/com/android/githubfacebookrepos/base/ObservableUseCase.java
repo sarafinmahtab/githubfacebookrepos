@@ -45,4 +45,16 @@ public abstract class ObservableUseCase<Params, Results> extends BaseReactiveUse
         Observable<Results> observable = buildUseCaseObservableWithSchedulers(params);
         addDisposable(observable.subscribeWith(observer));
     }
+
+
+    /**
+     * Executes the current use case immediately using blockingGet().
+     *
+     * @param params Parameters (Optional) used to build/execute this use case.
+     */
+    public Results executeImmediate(Params params) {
+        Observable<Results> observable = buildUseCaseObservableWithSchedulers(params);
+        addDisposable(observable.subscribe());
+        return observable.blockingFirst();
+    }
 }

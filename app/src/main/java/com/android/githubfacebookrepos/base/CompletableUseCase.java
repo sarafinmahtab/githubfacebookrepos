@@ -46,6 +46,12 @@ public abstract class CompletableUseCase<Params> extends BaseReactiveUseCase {
         addDisposable(completable.subscribeWith(observer));
     }
 
+
+    /**
+     * Executes the current use case. Skips the subscriber.
+     *
+     * @param params Parameters (Optional) used to build/execute this use case.
+     */
     public void execute(Params params) {
         Completable completable = buildUseCaseCompletableWithSchedulers(params);
         addDisposable(completable.subscribe());
