@@ -54,12 +54,8 @@ public class FetchOrgReposTest {
     }
 
 
-    /**
-     * ISSUE: This test is not matching though the data returns properly.
-     * Probable case should using different ResponseHolder instance for both object
-     */
     @Test
-    public void executeWithObserver_validRequest_gitRepoMinReturned() {
+    public void fetchReposWithObserver_validRequest_gitRepoMinReturned() {
 
         // Params
         ParamFetchOrgRepo paramFetchOrgRepo = new ParamFetchOrgRepo(true, true, "facebook");
@@ -77,7 +73,8 @@ public class FetchOrgReposTest {
                 .subscribe(gitRepoMinTestObserver);
 
         // Validation
-        gitRepoMinTestObserver.assertValue(ResponseHolder.success(githubRepoMins));
+        Assert.assertThat(gitRepoMinTestObserver.values().get(0).getData(), CoreMatchers.is(githubRepoMins));
+        Assert.assertEquals(gitRepoMinTestObserver.values().get(0).getStatus(), ResponseHolder.Status.SUCCESS);
 
         // Clean Up
         gitRepoMinTestObserver.dispose();
@@ -85,7 +82,7 @@ public class FetchOrgReposTest {
 
 
     @Test
-    public void executeImmediate_validRequest_gitRepoMinReturned() {
+    public void fetchReposFromServer_validRequest_gitRepoMinReturned() {
 
         // Params
         ParamFetchOrgRepo paramFetchOrgRepo = new ParamFetchOrgRepo(true, true, "facebook");
@@ -100,12 +97,32 @@ public class FetchOrgReposTest {
         ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
 
         // Validation
-        Assert.assertThat(responseHolder, CoreMatchers.not(ResponseHolder.success(githubRepoMins)));
+        Assert.assertThat(responseHolder.getData(), CoreMatchers.is(githubRepoMins));
+        Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.SUCCESS);
     }
 
+    @Test
+    public void fetchCachedRepos_validRequest_gitRepoMinReturned() {
+
+        // Params
+        ParamFetchOrgRepo paramFetchOrgRepo = new ParamFetchOrgRepo(true, false, "facebook");
+
+        // Mock Response
+        Mockito.doReturn(
+                Single.just(githubRepoMins)
+        ).when(mainRepo).fetchCachedOrganizationRepos(paramFetchOrgRepo.getOrgName());
+
+
+        // Execution
+        ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
+
+        // Validation
+        Assert.assertEquals(responseHolder.getData(), githubRepoMins);
+        Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.SUCCESS);
+    }
 
     @Test
-    public void executeImmediate_validRequest_gitRepoResponseNotReturned() {
+    public void fetchReposFromServer_validRequest_gitRepoResponseNotReturned() {
 
         // Params
         ParamFetchOrgRepo paramFetchOrgRepo = new ParamFetchOrgRepo(true, true, "facebook");
@@ -119,11 +136,12 @@ public class FetchOrgReposTest {
         ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
 
         // Validation
-        Assert.assertThat(responseHolder, CoreMatchers.not(ResponseHolder.success(githubRepos)));
+        Assert.assertThat(responseHolder.getData(), CoreMatchers.not(githubRepos));
+        Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.SUCCESS);
     }
 
     @Test
-    public void executeImmediate_invalidRequest_gitRepoResponseNotReturned() {
+    public void fetchReposFromServer_invalidRequest_gitRepoResponseNotReturned() {
 
         // Params
 //        ParamFetchOrgRepo paramFetchOrgRepo = new ParamFetchOrgRepo(true, true, "facebook");
@@ -138,12 +156,13 @@ public class FetchOrgReposTest {
                 new ParamFetchOrgRepo(true, true, null));
 
         // Validation
-        Assert.assertThat(responseHolder, CoreMatchers.not(ResponseHolder.success(githubRepos)));
+        Assert.assertThat(responseHolder.getData(), CoreMatchers.not(githubRepos));
+        Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.ERROR);
     }
 
 
     @Test
-    public void executeImmediate_runtimeException_errorResponseReturned() {
+    public void fetchReposFromServer_runtimeException_errorResponseReturned() {
 
         RuntimeException runtimeException = new RuntimeException();
 
@@ -160,6 +179,7 @@ public class FetchOrgReposTest {
 
         // Validation
         Assert.assertThat(responseHolder.getError(), CoreMatchers.is(runtimeException));
+        Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.ERROR);
     }
 
 

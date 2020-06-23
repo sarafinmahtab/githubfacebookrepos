@@ -1,9 +1,10 @@
 package com.android.githubfacebookrepos.dal.repos;
 
+import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.api.GithubRepo;
 import com.android.githubfacebookrepos.model.api.Owner;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
-import com.android.githubfacebookrepos.model.params.ParamFetchOrgRepo;
+import com.android.githubfacebookrepos.model.mapped.RepoNote;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -14,7 +15,11 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.UUID;
 
+import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.plugins.RxAndroidPlugins;
 import io.reactivex.observers.TestObserver;
@@ -34,6 +39,8 @@ public class MainRepoTest {
     private ArrayList<GithubRepo> githubRepos;
     private ArrayList<GithubRepoMin> githubRepoMins;
 
+    private RepoNote repoNote;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -47,16 +54,19 @@ public class MainRepoTest {
 
     @Test
     public void fetchOrganizationReposFromServer_validRequest_returnedResponse() {
-        ParamFetchOrgRepo paramFetchOrgRepo = new ParamFetchOrgRepo(true, true, "facebook");
 
+        // Params
+        String orgName = "facebook";
+
+        // Mock Response
         Mockito.doReturn(
                 Single.just(githubRepos)
-        ).when(mainRepoSUT).fetchOrganizationReposFromServer(paramFetchOrgRepo.getOrgName());
+        ).when(mainRepoSUT).fetchOrganizationReposFromServer(orgName);
 
 
         // Trigger
         TestObserver<ArrayList<GithubRepo>> responseObserver =
-                mainRepoSUT.fetchOrganizationReposFromServer(paramFetchOrgRepo.getOrgName()).test();
+                mainRepoSUT.fetchOrganizationReposFromServer(orgName).test();
 
         // Validation
         responseObserver.assertValue(githubRepos);
@@ -84,17 +94,17 @@ public class MainRepoTest {
         RuntimeException runtimeException = new RuntimeException();
 
         // Params
-        ParamFetchOrgRepo paramFetchOrgRepo = new ParamFetchOrgRepo(true, true, "facebook");
+        String orgName = "facebook";
 
         // Mock Response
         Mockito.doReturn(
                 Single.error(runtimeException)
-        ).when(mainRepoSUT).fetchOrganizationReposFromServer(paramFetchOrgRepo.getOrgName());
+        ).when(mainRepoSUT).fetchOrganizationReposFromServer(orgName);
 
 
         // Trigger
         TestObserver<ArrayList<GithubRepo>> responseObserver =
-                mainRepoSUT.fetchOrganizationReposFromServer(paramFetchOrgRepo.getOrgName()).test();
+                mainRepoSUT.fetchOrganizationReposFromServer(orgName).test();
 
         // Validation
         responseObserver.assertError(runtimeException);
@@ -106,20 +116,86 @@ public class MainRepoTest {
     @Test
     public void fetchCachedOrganizationRepos_validRequest_returnedResponse() {
 
+        // Params
+        String orgName = "facebook";
+
+        // Mock Response
+        Mockito.doReturn(
+                Single.just(githubRepoMins)
+        ).when(mainRepoSUT).fetchCachedOrganizationRepos(orgName);
+
+
+        // Trigger
+        TestObserver<ArrayList<GithubRepoMin>> responseObserver =
+                mainRepoSUT.fetchCachedOrganizationRepos(orgName).test();
+
+        // Validation
+        responseObserver.assertValue(githubRepoMins);
+
+        // Clean Up
+        responseObserver.dispose();
     }
 
     @Test
     public void saveOrganizationReposLocally_validRequest_returnedResponse() {
 
+        // Mock Response
+        Mockito.doReturn(
+                Completable.complete()
+        ).when(mainRepoSUT).saveOrganizationReposLocally(githubRepoMins);
+
+
+        // Trigger
+        TestObserver<Void> responseObserver =
+                mainRepoSUT.saveOrganizationReposLocally(githubRepoMins).test();
+
+        // Validation
+        responseObserver.assertComplete();
+
+        // Clean Up
+        responseObserver.dispose();
     }
 
     @Test
     public void addUpdateNoteForRepo_validRequest_returnedResponse() {
 
+        ResponseHolder<RepoNote> responseHolder = ResponseHolder.success(repoNote);
+
+        // Mock Response
+        Mockito.doReturn(
+                Single.just(responseHolder)
+        ).when(mainRepoSUT).addUpdateNoteForRepo(repoNote);
+
+        // Trigger
+        TestObserver<ResponseHolder<RepoNote>> responseObserver =
+                mainRepoSUT.addUpdateNoteForRepo(repoNote).test();
+
+        // Validation
+        responseObserver.assertValue(responseHolder);
+
+        // Clean Up
+        responseObserver.dispose();
     }
 
     @Test
     public void fetchRepoNote_validRequest_returnedResponse() {
+        ResponseHolder<RepoNote> responseHolder = ResponseHolder.success(repoNote);
+
+        // Mock Response
+        Mockito.doReturn(
+                Observable.just(responseHolder)
+        ).when(mainRepoSUT).fetchRepoNote(githubRepoMins.get(0).getRepoId());
+
+        // Trigger
+        TestObserver<ResponseHolder<RepoNote>> responseObserver =
+                mainRepoSUT.fetchRepoNote(githubRepoMins.get(0).getRepoId()).test();
+
+        // Validation
+        responseObserver.assertValue(responseHolder);
+
+        // Clean Up
+        responseObserver.dispose();
+
 
     }
 
@@ -161,6 +237,13 @@ public class MainRepoTest {
 
         githubRepoMins = new ArrayList<>();
         githubRepoMins.add(githubRepoMin);
+
+
+        repoNote = new RepoNote(
+                UUID.randomUUID().toString(),
+                "Nice Repo",
+                new Date().getTime(),
+                githubRepoMin.getRepoId());
     }
 
 
