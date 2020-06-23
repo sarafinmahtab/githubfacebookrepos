@@ -1,4 +1,4 @@
-package com.android.githubfacebookrepos.views.notes;
+package com.android.githubfacebookrepos.views.notes.dialog;
 
 /*
  * Created by Arafin Mahtab on 6/21/20.
@@ -15,6 +15,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.android.githubfacebookrepos.R;
 import com.android.githubfacebookrepos.databinding.DialogAddNoteBinding;
+import com.android.githubfacebookrepos.helpers.CommonUtil;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.UUID;
@@ -27,8 +28,7 @@ public class AddNoteDialog extends BottomSheetDialogFragment {
     public static AddNoteDialog getInstance(
             AddNoteListener addNoteListener,
             @Nullable String currentNoteId,
-            @Nullable String currentNote
-    ) {
+            @Nullable String currentNote) {
         AddNoteDialog dialog = new AddNoteDialog(addNoteListener);
 
         if (currentNoteId != null) {
@@ -47,6 +47,7 @@ public class AddNoteDialog extends BottomSheetDialogFragment {
     private String currentNote;
 
     private DialogAddNoteBinding binding;
+    private NoteObservableField noteObservableField;
 
     private AddNoteListener addNoteListener;
 
@@ -66,12 +67,18 @@ public class AddNoteDialog extends BottomSheetDialogFragment {
         noteId = (noteId == null || noteId.isEmpty()) ? UUID.randomUUID().toString() : noteId;
         currentNote = (currentNote == null || currentNote.isEmpty()) ? "" : currentNote;
 
+        noteObservableField = new NoteObservableField();
 
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_add_note, container, false);
-        binding.noteEditText.setText(currentNote);
+        binding.setNoteObservableField(noteObservableField);
+        noteObservableField.setNote(currentNote);
+
+        if (getActivity() != null) {
+            CommonUtil.showSoftKeyboardForced(getActivity(), binding.noteEditText);
+        }
 
         binding.addNoteImageView.setOnClickListener(v -> {
-            String note = binding.noteEditText.getText() != null ? binding.noteEditText.getText().toString() : currentNote;
+            String note = noteObservableField.getNote().get() != null ? noteObservableField.getNote().get() : currentNote;
             if (note == null || note.isEmpty()) {
                 binding.noteEditText.setError(getString(R.string.empty_note_error));
             } else {
@@ -79,6 +86,7 @@ public class AddNoteDialog extends BottomSheetDialogFragment {
                 dismiss();
             }
         });
+
 
         return binding.getRoot();
     }
