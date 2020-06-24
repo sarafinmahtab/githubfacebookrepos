@@ -1,6 +1,13 @@
 package com.android.githubfacebookrepos.usecase;
 
+import com.android.githubfacebookrepos.dal.db.LocalDataSource;
+import com.android.githubfacebookrepos.dal.db.LocalDataSourceImpl;
+import com.android.githubfacebookrepos.dal.db.RealmRxService;
+import com.android.githubfacebookrepos.dal.network.ApiService;
+import com.android.githubfacebookrepos.dal.network.RemoteDataSource;
+import com.android.githubfacebookrepos.dal.network.RemoteDataSourceImpl;
 import com.android.githubfacebookrepos.dal.repos.MainRepo;
+import com.android.githubfacebookrepos.dal.repos.MainRepoImpl;
 import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.api.GithubRepo;
 import com.android.githubfacebookrepos.model.api.Owner;
@@ -32,7 +39,8 @@ import io.reactivex.plugins.RxJavaPlugins;
 @RunWith(MockitoJUnitRunner.class)
 public class FetchOrgReposTest {
 
-    private MainRepo mainRepo;
+    private RealmRxService realmRxService;
+    private ApiService apiService;
     private FetchOrgRepos fetchOrgReposSUT;
 
 
@@ -46,8 +54,14 @@ public class FetchOrgReposTest {
         MockitoAnnotations.initMocks(this);
 
         // Dependencies
-        mainRepo = Mockito.mock(MainRepo.class);
-        fetchOrgReposSUT = new FetchOrgRepos(mainRepo);
+        apiService = Mockito.mock(ApiService.class);
+        realmRxService = Mockito.mock(RealmRxService.class);
+        RemoteDataSource remoteDataSource = new RemoteDataSourceImpl(apiService);
+        LocalDataSource localDataSource = new LocalDataSourceImpl(realmRxService);
+        MainRepo mainRepo = new MainRepoImpl(remoteDataSource, localDataSource);
+
+        SaveOrgRepos saveOrgRepos = Mockito.mock(SaveOrgRepos.class);
+        fetchOrgReposSUT = new FetchOrgRepos(mainRepo, saveOrgRepos);
 
 
         populateTestData();
@@ -61,7 +75,7 @@ public class FetchOrgReposTest {
         ParamFetchOrgRepo paramFetchOrgRepo = new ParamFetchOrgRepo(true, true, "facebook");
 
         // Mock Response
-        Mockito.when(mainRepo.fetchOrganizationReposFromServer(paramFetchOrgRepo.getOrgName()))
+        Mockito.when(apiService.fetchOrganizationRepos(paramFetchOrgRepo.getOrgName()))
                 .thenReturn(Single.just(githubRepos));
 
 
@@ -90,7 +104,7 @@ public class FetchOrgReposTest {
         // Mock Response
         Mockito.doReturn(
                 Single.just(githubRepos)
-        ).when(mainRepo).fetchOrganizationReposFromServer(paramFetchOrgRepo.getOrgName());
+        ).when(apiService).fetchOrganizationRepos(paramFetchOrgRepo.getOrgName());
 
 
         // Execution
@@ -110,7 +124,7 @@ public class FetchOrgReposTest {
         // Mock Response
         Mockito.doReturn(
                 Single.just(githubRepoMins)
-        ).when(mainRepo).fetchCachedOrganizationRepos(paramFetchOrgRepo.getOrgName());
+        ).when(realmRxService).fetchCachedGithubRepo(paramFetchOrgRepo.getOrgName());
 
 
         // Execution
@@ -130,7 +144,7 @@ public class FetchOrgReposTest {
         // Mock Response
         Mockito.doReturn(
                 Single.just(githubRepos)
-        ).when(mainRepo).fetchOrganizationReposFromServer(paramFetchOrgRepo.getOrgName());
+        ).when(apiService).fetchOrganizationRepos(paramFetchOrgRepo.getOrgName());
 
         // Execution
         ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
@@ -172,7 +186,7 @@ public class FetchOrgReposTest {
         // Mock Response
         Mockito.doReturn(
                 Single.error(runtimeException)
-        ).when(mainRepo).fetchOrganizationReposFromServer(paramFetchOrgRepo.getOrgName());
+        ).when(apiService).fetchOrganizationRepos(paramFetchOrgRepo.getOrgName());
 
         // Execution
         ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
