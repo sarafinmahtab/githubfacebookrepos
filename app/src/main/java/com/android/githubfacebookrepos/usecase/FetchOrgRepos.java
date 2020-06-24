@@ -32,21 +32,23 @@ public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHold
     private final String TAG = this.getClass().getName();
 
     private MainRepo mainRepo;
+    private SaveOrgRepos saveOrgReposUseCase;
 
     @Inject
-    public FetchOrgRepos(MainRepo mainRepo) {
+    public FetchOrgRepos(MainRepo mainRepo, SaveOrgRepos saveOrgRepos) {
         // Telling rx java to load this use case with IO thread and
         // by default observe on main thread.
         threadExecutorScheduler = WorkScheduler.with(SchedulerType.IO);
 
         this.mainRepo = mainRepo;
+        this.saveOrgReposUseCase = saveOrgRepos;
     }
 
     @Override
     protected Single<ResponseHolder<ArrayList<GithubRepoMin>>> buildUseCaseSingle(ParamFetchOrgRepo paramFetchOrgRepo) {
 
         try {
-            if (paramFetchOrgRepo.isShouldCacheResponse() && paramFetchOrgRepo.isNetworkConnectionAvailable()) {
+            if (paramFetchOrgRepo.isNetworkConnectionAvailable()) {
 
                 // Loading GithubRepo Data from server and mapped to secondary object GithubRepoMin
 
@@ -66,6 +68,8 @@ public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHold
                                             githubRepo.getDescription(),
                                             githubRepo.isFork())
                                     ).collect(Collectors.toCollection(ArrayList::new));
+
+                            saveOrgReposUseCase.execute(githubRepoMinArrayList);
 
                             return ResponseHolder.success(githubRepoMinArrayList);
                         })

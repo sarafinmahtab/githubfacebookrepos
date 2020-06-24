@@ -12,8 +12,8 @@ import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.model.params.ParamFetchOrgRepo;
 import com.android.githubfacebookrepos.usecase.FetchOrgRepos;
-import com.android.githubfacebookrepos.usecase.SaveOrgRepos;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -23,17 +23,12 @@ import io.reactivex.observers.DisposableSingleObserver;
 public class MainViewModel extends ViewModel {
 
     private FetchOrgRepos fetchOrgReposUseCase;
-    private SaveOrgRepos saveOrgReposUseCase;
 
     MutableLiveData<ResponseHolder<ArrayList<GithubRepoMin>>> orgRepoListLiveData = new MutableLiveData<>();
 
     @Inject
-    public MainViewModel(
-            FetchOrgRepos fetchOrgRepos,
-            SaveOrgRepos saveOrgRepos
-    ) {
+    public MainViewModel(FetchOrgRepos fetchOrgRepos) {
         this.fetchOrgReposUseCase = fetchOrgRepos;
-        this.saveOrgReposUseCase = saveOrgRepos;
     }
 
     /**
@@ -53,10 +48,7 @@ public class MainViewModel extends ViewModel {
                     public void onSuccess(ResponseHolder<ArrayList<GithubRepoMin>> gitRepoListResponseHolder) {
                         orgRepoListLiveData.postValue(gitRepoListResponseHolder);
 
-                        if (AppConstant.offlineModeEnabled && isConnectionAvailable) {
-                            // Saving latest data fetched from server
-                            saveOrgReposUseCase.execute(gitRepoListResponseHolder.getData());
-                        }
+                        showCachedResponseOnError(orgName, gitRepoListResponseHolder.getError());
 
                         dispose();
                     }
@@ -65,9 +57,17 @@ public class MainViewModel extends ViewModel {
                     public void onError(Throwable e) {
                         orgRepoListLiveData.postValue(ResponseHolder.error(e));
 
+                        showCachedResponseOnError(orgName, e);
+
                         dispose();
                     }
                 });
+    }
+
+    private void showCachedResponseOnError(String orgName, Throwable error) {
+        if (error instanceof UnknownHostException) {
+            fetchGithubRepos(orgName, false);
+        }
     }
 
     @Override
@@ -75,7 +75,6 @@ public class MainViewModel extends ViewModel {
 
         // Disposing All UseCases before ViewModel is cleared
         fetchOrgReposUseCase.dispose();
-        saveOrgReposUseCase.dispose();
 
         super.onCleared();
     }
