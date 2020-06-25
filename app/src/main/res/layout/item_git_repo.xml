@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:padding="10dp"
-            app:layout_constraintBottom_toBottomOf="@+id/separatorLine"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@+id/repoNameTextView"
             app:layout_constraintStart_toStartOf="parent"
@@ -68,22 +68,11 @@
             android:text="@{gitRepoMin.description}"
             android:textColor="@color/textColorBlack"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/separatorLine"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/repoNameTextView"
             app:layout_constraintStart_toStartOf="@+id/repoNameTextView"
             app:layout_constraintTop_toBottomOf="@+id/ownerNameTextView"
             tools:text="A library that provides an embeddable, persistent key-value store for fast storage." />
-
-        <View
-            android:id="@+id/separatorLine"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            android:background="@{gitRepoMin.forked ? @color/backgroundColor : @color/lineColor}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/repoDescTextView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
