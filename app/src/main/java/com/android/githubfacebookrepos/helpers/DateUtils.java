@@ -10,7 +10,7 @@ import java.util.Locale;
 
 public final class DateUtils {
 
-    public static final String DATE_FORMAT = "MMM dd, ''yy 'at' HH:mm:ss";
+    public static final String DATE_FORMAT = "MMM dd, ''yy 'at' hh:mm:ss";
 
     public static String getDateStringByFormat(long dateFormatted, String format) {
         try {
