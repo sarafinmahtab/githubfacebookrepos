@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android.githubfacebookrepos.MainApplication;
@@ -68,7 +69,12 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         adapter = new GitReposAdapter(this);
 
         // Initializing Views with DataBinding
-        binding.gitRepoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        binding.gitRepoRecyclerView.setLayoutManager(layoutManager);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, layoutManager.getOrientation());
+        binding.gitRepoRecyclerView.addItemDecoration(dividerItemDecoration);
+
         binding.gitRepoRecyclerView.setAdapter(adapter);
 
 
