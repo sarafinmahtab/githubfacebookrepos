@@ -12,6 +12,7 @@ import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.model.mapped.RepoNote;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -19,28 +20,26 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 public class RealmRxService {
 
-    private Realm realm;
-
-    private RealmRxService() {
-
-    }
-
     @Inject
-    public RealmRxService(Realm realm) {
-        this.realm = realm;
+    public RealmRxService() {
+
     }
 
     public Single<ArrayList<GithubRepoMin>> fetchCachedGithubRepo(String orgName) {
-
         try {
-            return Single.just(new ArrayList<>(
-                    realm.where(GithubRepoMin.class)
-                            .like(AppConstant.ORG_NAME_FIELD, orgName)
-                            .findAll()
-            ));
+            Realm realm = Realm.getDefaultInstance();
+            RealmQuery<GithubRepoMin> query = realm.where(GithubRepoMin.class);
+            RealmResults<GithubRepoMin> items = query
+                    .like(AppConstant.ORG_NAME_FIELD, orgName)
+                    .findAll();
+            List<GithubRepoMin> results = realm.copyFromRealm(items);
+
+            return Single.just(new ArrayList<>(results));
         } catch (Exception e) {
             e.printStackTrace();
             return Single.error(e);
@@ -49,11 +48,12 @@ public class RealmRxService {
 
     public Completable saveOrganizationRepos(ArrayList<GithubRepoMin> githubRepoMins) {
         try {
-            return Completable.create(
-                    emitter -> realm.executeTransaction(
-                            realm -> realm.insertOrUpdate(githubRepoMins)
-                    )
-            );
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            realm.insertOrUpdate(githubRepoMins);
+            realm.commitTransaction();
+
+            return Completable.complete();
         } catch (Exception e) {
             e.printStackTrace();
             return Completable.error(e);
@@ -62,13 +62,12 @@ public class RealmRxService {
 
     public Single<ResponseHolder<RepoNote>> addUpdateNote(RepoNote repoNote) {
         try {
-            return Single.create(emitter ->
-                    realm.executeTransactionAsync(
-                            realm -> realm.insertOrUpdate(repoNote),
-                            () -> emitter.onSuccess(ResponseHolder.success(repoNote)),
-                            emitter::onError
-                    )
-            );
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            realm.insertOrUpdate(repoNote);
+            realm.commitTransaction();
+
+            return Single.just(ResponseHolder.success(repoNote));
         } catch (Exception e) {
             e.printStackTrace();
             return Single.error(e);
@@ -77,17 +76,16 @@ public class RealmRxService {
 
     public Observable<ResponseHolder<RepoNote>> fetchRepoNote(int repoId) {
         try {
-            return Observable.create(emitter -> {
-                RepoNote repoNote = realm.where(RepoNote.class)
-                        .equalTo(AppConstant.REPO_ID_FIELD, repoId)
-                        .findFirst();
+            Realm realm = Realm.getDefaultInstance();
+            RepoNote repoNote = realm.where(RepoNote.class)
+                    .equalTo(AppConstant.REPO_ID_FIELD, repoId)
+                    .findFirst();
 
-                if (repoNote != null) {
-                    emitter.onNext(ResponseHolder.success(repoNote));
-                } else {
-                    emitter.onError(new Resources.NotFoundException("No repo note found with the repo id " + repoId));
-                }
-            });
+            if (repoNote != null) {
+                return Observable.just(ResponseHolder.success(repoNote));
+            } else {
+                return Observable.error(new Resources.NotFoundException("No repo note found with the repo id " + repoId));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return Observable.error(e);
@@ -95,6 +93,7 @@ public class RealmRxService {
     }
 
     public void close() {
+        Realm realm = Realm.getDefaultInstance();
         if (!realm.isClosed()) {
             realm.close();
         }

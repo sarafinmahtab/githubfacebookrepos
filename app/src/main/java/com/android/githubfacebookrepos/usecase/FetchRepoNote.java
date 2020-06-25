@@ -4,7 +4,6 @@ package com.android.githubfacebookrepos.usecase;
  * Created by Arafin Mahtab on 6/21/20.
  */
 
-import android.os.Looper;
 import android.util.Log;
 
 import com.android.githubfacebookrepos.base.ObservableUseCase;
@@ -12,6 +11,7 @@ import com.android.githubfacebookrepos.dal.repos.MainRepo;
 import com.android.githubfacebookrepos.helpers.CommonUtil;
 import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.mapped.RepoNote;
+import com.android.githubfacebookrepos.worker.SchedulerType;
 import com.android.githubfacebookrepos.worker.WorkScheduler;
 
 import javax.inject.Inject;
@@ -28,7 +28,7 @@ public class FetchRepoNote extends ObservableUseCase<Integer, ResponseHolder<Rep
     public FetchRepoNote(MainRepo mainRepo) {
         // Telling rx java to load this use case with looper of current thread and
         // by default observe on main thread.
-        threadExecutorScheduler = WorkScheduler.with(Looper.myLooper());
+        threadExecutorScheduler = WorkScheduler.with(SchedulerType.IO);
 
         this.mainRepo = mainRepo;
     }
