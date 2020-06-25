@@ -15,6 +15,7 @@ import com.android.githubfacebookrepos.model.params.ParamFetchOrgRepo;
 import com.android.githubfacebookrepos.worker.SchedulerType;
 import com.android.githubfacebookrepos.worker.WorkScheduler;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -72,6 +73,17 @@ public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHold
                             saveOrgReposUseCase.execute(githubRepoMinArrayList);
 
                             return ResponseHolder.success(githubRepoMinArrayList);
+                        })
+                        .onErrorResumeNext(throwable -> {
+                            if (throwable instanceof UnknownHostException) {
+                                return buildUseCaseSingle(
+                                        new ParamFetchOrgRepo(paramFetchOrgRepo.isShouldCacheResponse(),
+                                                false,
+                                                paramFetchOrgRepo.getOrgName()
+                                        )
+                                );
+                            }
+                            return Single.error(throwable);
                         })
                         .onErrorReturn(throwable -> {
 

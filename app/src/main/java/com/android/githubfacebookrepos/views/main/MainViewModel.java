@@ -13,7 +13,6 @@ import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.model.params.ParamFetchOrgRepo;
 import com.android.githubfacebookrepos.usecase.FetchOrgRepos;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -48,8 +47,6 @@ public class MainViewModel extends ViewModel {
                     public void onSuccess(ResponseHolder<ArrayList<GithubRepoMin>> gitRepoListResponseHolder) {
                         orgRepoListLiveData.postValue(gitRepoListResponseHolder);
 
-                        showCachedResponseOnError(orgName, gitRepoListResponseHolder.getError());
-
                         dispose();
                     }
 
@@ -57,17 +54,9 @@ public class MainViewModel extends ViewModel {
                     public void onError(Throwable e) {
                         orgRepoListLiveData.postValue(ResponseHolder.error(e));
 
-                        showCachedResponseOnError(orgName, e);
-
                         dispose();
                     }
                 });
-    }
-
-    private void showCachedResponseOnError(String orgName, Throwable error) {
-        if (error instanceof UnknownHostException) {
-            fetchGithubRepos(orgName, false);
-        }
     }
 
     @Override

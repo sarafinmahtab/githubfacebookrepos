@@ -35,7 +35,7 @@ public class RealmRxService {
             Realm realm = Realm.getDefaultInstance();
             RealmQuery<GithubRepoMin> query = realm.where(GithubRepoMin.class);
             RealmResults<GithubRepoMin> items = query
-                    .like(AppConstant.ORG_NAME_FIELD, orgName)
+                    .equalTo(AppConstant.ORG_NAME_FIELD, orgName)
                     .findAll();
             List<GithubRepoMin> results = realm.copyFromRealm(items);
 
