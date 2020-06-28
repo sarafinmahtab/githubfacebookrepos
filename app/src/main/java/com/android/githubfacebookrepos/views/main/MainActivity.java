@@ -8,7 +8,6 @@ package com.android.githubfacebookrepos.views.main;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -98,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
             case LOADING:
 
                 binding.progressBar.setVisibility(View.VISIBLE);
+                binding.emptyViewGroup.setVisibility(View.GONE);
 
                 break;
             case SUCCESS:
@@ -105,15 +105,25 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
                 adapter.submitRepoList(orgRepoListResponseHolder.getData());
                 binding.progressBar.setVisibility(View.GONE);
 
+                binding.emptyViewGroup.setVisibility(
+                        orgRepoListResponseHolder.getData() == null ?
+                                View.VISIBLE :
+                                View.GONE);
+
+                binding.emptyTextView.setText(getString(R.string.no_repo_found));
+
                 break;
             case ERROR:
 
                 adapter.submitRepoList(new ArrayList<>());
                 binding.progressBar.setVisibility(View.GONE);
+                binding.emptyViewGroup.setVisibility(View.VISIBLE);
 
-                String warningMessage = CommonUtil.prepareErrorMessage(orgRepoListResponseHolder.getError());
-                Log.w(TAG, warningMessage);
-                Toast.makeText(this, warningMessage, Toast.LENGTH_LONG).show();
+                String logMessage = CommonUtil.getErrorMessage(orgRepoListResponseHolder.getError());
+                Log.w(TAG, logMessage);
+
+                String errorMessage = CommonUtil.prepareErrorMessage(this, orgRepoListResponseHolder.getError());
+                binding.emptyTextView.setText(errorMessage);
 
                 break;
         }

@@ -38,7 +38,7 @@ public class FetchRepoNote extends ObservableUseCase<Integer, ResponseHolder<Rep
         try {
             return mainRepo.fetchRepoNote(integer);
         } catch (Exception e) {
-            String error = CommonUtil.prepareErrorMessage(e);
+            String error = CommonUtil.getErrorMessage(e);
             Log.w(TAG, error);
             return Observable.just(ResponseHolder.error(e));
         }

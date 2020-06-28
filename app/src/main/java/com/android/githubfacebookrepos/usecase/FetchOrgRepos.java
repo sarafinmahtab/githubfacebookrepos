@@ -94,7 +94,7 @@ public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHold
             }
 
         } catch (Exception e) {
-            String error = CommonUtil.prepareErrorMessage(e);
+            String error = CommonUtil.getErrorMessage(e);
             Log.w(TAG, error);
             return Single.just(ResponseHolder.error(e));
         }

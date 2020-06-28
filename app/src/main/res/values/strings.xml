@@ -7,4 +7,11 @@
     <string name="edit_note">Edit This Note</string>
 
     <string name="empty_note_error">You should not add any empty note</string>
+
+    <string name="local_exception_error">An internal error occurred. Please try later.</string>
+    <string name="server_exception_error">A server error occurred. Please try later.</string>
+    <string name="network_exception_error">A network error occurred. Please try again.</string>
+    <string name="unexpected_error">An unexpected error occurred. Please try again.</string>
+
+    <string name="no_repo_found">No repo found for this organization</string>
 </resources>

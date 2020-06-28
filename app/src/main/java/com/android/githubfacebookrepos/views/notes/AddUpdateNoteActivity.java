@@ -101,8 +101,8 @@ public class AddUpdateNoteActivity extends AppCompatActivity implements View.OnC
                     break;
                 case ERROR:
 
-                    String warningMessage = CommonUtil.prepareErrorMessage(repoNoteResponseHolder.getError());
-                    Log.w(TAG, warningMessage);
+                    String logMessage = CommonUtil.getErrorMessage(repoNoteResponseHolder.getError());
+                    Log.w(TAG, logMessage);
 
                     break;
             }
