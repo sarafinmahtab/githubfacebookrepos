@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
                 binding.progressBar.setVisibility(View.GONE);
 
                 binding.emptyViewGroup.setVisibility(
-                        orgRepoListResponseHolder.getData() == null ?
+                        orgRepoListResponseHolder.getData().isEmpty() ?
                                 View.VISIBLE :
                                 View.GONE);
 
