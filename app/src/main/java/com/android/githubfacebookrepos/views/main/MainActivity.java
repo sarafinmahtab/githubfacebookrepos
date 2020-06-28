@@ -27,6 +27,8 @@ import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.views.main.adapter.GitReposAdapter;
 import com.android.githubfacebookrepos.views.notes.AddUpdateNoteActivity;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 
 import java.util.ArrayList;
 
@@ -65,7 +67,8 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         // Initializing viewModel from injected ViewModelFactory
         viewModel = new ViewModelProvider(this, viewModelFactory).get(MainViewModel.class);
 
-        adapter = new GitReposAdapter(this);
+        RequestManager glideRequestManager = Glide.with(this);
+        adapter = new GitReposAdapter(glideRequestManager, this);
 
         // Initializing Views with DataBinding
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
