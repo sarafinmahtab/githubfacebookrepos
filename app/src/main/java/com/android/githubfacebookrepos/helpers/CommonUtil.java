@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.android.githubfacebookrepos.R;
 import com.android.githubfacebookrepos.model.exceptions.LocalException;
 import com.android.githubfacebookrepos.model.exceptions.NetworkException;
 import com.android.githubfacebookrepos.model.exceptions.ServerException;
@@ -27,18 +28,20 @@ public final class CommonUtil {
         }
     }
 
-    public static String prepareErrorMessage(Throwable throwable) {
+    public static String getErrorMessage(Throwable throwable) {
+        return throwable.getMessage() == null ? throwable.toString() : throwable.getMessage();
+    }
 
-        String errorMessage = throwable.getMessage() == null ? throwable.toString() : throwable.getMessage();
+    public static String prepareErrorMessage(Context context, Throwable throwable) {
 
         if (throwable instanceof LocalException) {
-            return errorMessage;
+            return context.getString(R.string.local_exception_error);
         } else if (throwable instanceof ServerException) {
-            return errorMessage;
+            return context.getString(R.string.server_exception_error);
         } else if (throwable instanceof NetworkException) {
-            return errorMessage;
+            return context.getString(R.string.network_exception_error);
         } else {
-            return errorMessage;
+            return context.getString(R.string.unexpected_error);
         }
     }
 

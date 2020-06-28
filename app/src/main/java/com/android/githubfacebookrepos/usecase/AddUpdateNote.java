@@ -38,7 +38,7 @@ public class AddUpdateNote extends SingleUseCase<RepoNote, ResponseHolder<RepoNo
         try {
             return mainRepo.addUpdateNoteForRepo(repoNote);
         } catch (Exception e) {
-            String error = CommonUtil.prepareErrorMessage(e);
+            String error = CommonUtil.getErrorMessage(e);
             Log.w(TAG, error);
             return Single.just(ResponseHolder.error(e));
         }

@@ -45,13 +45,13 @@ public class SaveOrgRepos extends CompletableUseCase<ArrayList<GithubRepoMin>> {
         try {
             return mainRepo.saveOrganizationReposLocally(githubRepoMins)
                     .onErrorComplete(throwable -> {
-                        String error = CommonUtil.prepareErrorMessage(throwable);
+                        String error = CommonUtil.getErrorMessage(throwable);
                         Log.w(TAG, error);
                         return true;
                     });
 
         } catch (Exception e) {
-            String error = CommonUtil.prepareErrorMessage(e);
+            String error = CommonUtil.getErrorMessage(e);
             Log.w(TAG, error);
             return Completable.error(e);
         }
