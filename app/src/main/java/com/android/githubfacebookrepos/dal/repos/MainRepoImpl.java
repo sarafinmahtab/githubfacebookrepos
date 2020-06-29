@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.android.githubfacebookrepos.dal.db.LocalDataSource;
 import com.android.githubfacebookrepos.dal.network.RemoteDataSource;
+import com.android.githubfacebookrepos.di.AppScope;
 import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.api.GithubRepo;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
@@ -21,7 +22,7 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 
-
+@AppScope
 public class MainRepoImpl implements MainRepo {
 
     private final String TAG = this.getClass().getName();

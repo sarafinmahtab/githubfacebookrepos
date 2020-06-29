@@ -7,6 +7,7 @@ package com.android.githubfacebookrepos.dal.db;
 import android.content.res.Resources;
 
 import com.android.githubfacebookrepos.data.AppConstant;
+import com.android.githubfacebookrepos.di.AppScope;
 import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.model.mapped.RepoNote;
@@ -20,6 +21,7 @@ import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.realm.Realm;
 
+@AppScope
 public class RealmRxService {
 
     private Realm realm;

@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.android.githubfacebookrepos.base.CompletableUseCase;
 import com.android.githubfacebookrepos.dal.repos.MainRepo;
+import com.android.githubfacebookrepos.di.ActivityScope;
 import com.android.githubfacebookrepos.helpers.CommonUtil;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.worker.WorkScheduler;
@@ -23,6 +24,7 @@ import io.reactivex.Completable;
 /**
  * Dedicated UseCase Business logic responsible for saving github organization repos locally
  */
+@ActivityScope
 public class SaveOrgRepos extends CompletableUseCase<ArrayList<GithubRepoMin>> {
 
     private final String TAG = this.getClass().getName();

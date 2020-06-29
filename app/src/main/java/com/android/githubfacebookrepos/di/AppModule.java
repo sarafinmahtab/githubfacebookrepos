@@ -16,11 +16,13 @@ import dagger.Module;
 @Module
 public abstract class AppModule {
 
+    @AppScope
     // Makes Dagger provide RemoteDataSourceImpl when a RemoteDataSource type is requested
     @Binds
     public abstract RemoteDataSource providesRemoteDataSource(RemoteDataSourceImpl remoteDataSourceImpl);
 
 
+    @AppScope
     // Makes Dagger provide LocalDataSourceImpl when a LocalDataSource type is requested
     @Binds
     public abstract LocalDataSource providesLocalDataSource(LocalDataSourceImpl localDataSourceImpl);
