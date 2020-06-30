@@ -1,4 +1,4 @@
-package com.android.githubfacebookrepos.views.notes.dialog;
+package com.android.githubfacebookrepos.views.notes;
 
 /*
  * Created by Arafin Mahtab on 6/21/20.
@@ -50,7 +50,6 @@ public class AddNoteDialog extends BottomSheetDialogFragment {
     private String currentNote;
 
     private DialogAddNoteBinding binding;
-    private NoteObservableField noteObservableField;
 
     private AddNoteListener addNoteListener;
 
@@ -90,7 +89,7 @@ public class AddNoteDialog extends BottomSheetDialogFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 binding.addNoteImageView.setVisibility(
-                        s.toString().isEmpty() || s.toString().equals(currentNote) ?
+                        s.toString().trim().isEmpty() || s.toString().equals(currentNote) ?
                                 View.GONE : View.VISIBLE
                 );
             }
@@ -98,7 +97,7 @@ public class AddNoteDialog extends BottomSheetDialogFragment {
 
 
         binding.addNoteImageView.setOnClickListener(v -> {
-            String note = binding.noteEditText.getText() != null ? binding.noteEditText.getText().toString() : currentNote;
+            String note = binding.noteEditText.getText() != null ? binding.noteEditText.getText().toString().trim() : currentNote;
             if (note == null || note.isEmpty()) {
                 binding.noteEditText.setError(getString(R.string.empty_note_error));
             } else {
