@@ -4,6 +4,7 @@ package com.android.githubfacebookrepos.views.notes;
  * Created by Arafin Mahtab on 6/21/20.
  */
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 
 import com.android.githubfacebookrepos.R;
@@ -48,6 +50,8 @@ public class AddNoteDialog extends BottomSheetDialogFragment {
 
     private String noteId;
     private String currentNote;
+    private String editedNote;
+    private boolean alreadySaving = false;
 
     private DialogAddNoteBinding binding;
 
@@ -88,8 +92,11 @@ public class AddNoteDialog extends BottomSheetDialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+
+                editedNote = s.toString().trim();
+
                 binding.addNoteImageView.setVisibility(
-                        s.toString().trim().isEmpty() || s.toString().equals(currentNote) ?
+                        editedNote.isEmpty() || editedNote.equals(currentNote) ?
                                 View.GONE : View.VISIBLE
                 );
             }
@@ -97,17 +104,36 @@ public class AddNoteDialog extends BottomSheetDialogFragment {
 
 
         binding.addNoteImageView.setOnClickListener(v -> {
-            String note = binding.noteEditText.getText() != null ? binding.noteEditText.getText().toString().trim() : currentNote;
+            String note = editedNote != null ? editedNote : currentNote;
             if (note == null || note.isEmpty()) {
                 binding.noteEditText.setError(getString(R.string.empty_note_error));
             } else {
                 addNoteListener.onAddNote(noteId, note);
+                alreadySaving = true;
                 dismiss();
             }
         });
 
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        if (getContext() != null && editedNote != null && !editedNote.isEmpty() && !alreadySaving) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+            alertDialogBuilder.setMessage(R.string.alert_dialog_message)
+                    .setPositiveButton(R.string.yes, (dialog1, which) -> {
+                        addNoteListener.onAddNote(noteId, editedNote);
+                        dismiss();
+                    })
+                    .setNegativeButton(R.string.no, (dialog12, which) -> dismiss());
+
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
     }
 
     public interface AddNoteListener {
