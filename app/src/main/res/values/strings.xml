@@ -14,4 +14,8 @@
     <string name="unexpected_error">An unexpected error occurred. Please try again.</string>
 
     <string name="no_repo_found">No repo found for this organization</string>
+
+    <string name="alert_dialog_message">Do you want to save current note?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
