@@ -6,7 +6,7 @@ package com.android.githubfacebookrepos.dal.network;
 
 import com.android.githubfacebookrepos.model.api.GithubRepo;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Single;
 import retrofit2.http.GET;
@@ -15,7 +15,7 @@ import retrofit2.http.Path;
 public interface ApiService {
 
     @GET("orgs/{org}/repos")
-    Single<ArrayList<GithubRepo>> fetchOrganizationRepos(
+    Single<List<GithubRepo>> fetchOrganizationRepos(
             @Path("org") String orgName
     );
 }

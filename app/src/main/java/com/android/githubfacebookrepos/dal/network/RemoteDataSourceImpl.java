@@ -7,7 +7,7 @@ package com.android.githubfacebookrepos.dal.network;
 import com.android.githubfacebookrepos.di.AppScope;
 import com.android.githubfacebookrepos.model.api.GithubRepo;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -39,7 +39,7 @@ public class RemoteDataSourceImpl implements RemoteDataSource {
     }
 
     @Override
-    public Single<ArrayList<GithubRepo>> fetchOrganizationRepos(String orgName) {
+    public Single<List<GithubRepo>> fetchOrganizationRepos(String orgName) {
         try {
             return apiService.fetchOrganizationRepos(orgName);
         } catch (Exception e) {

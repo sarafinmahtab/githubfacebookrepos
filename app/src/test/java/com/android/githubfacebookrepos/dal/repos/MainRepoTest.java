@@ -22,6 +22,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import io.reactivex.Completable;
@@ -77,7 +78,7 @@ public class MainRepoTest {
 
 
         // Trigger
-        TestObserver<ArrayList<GithubRepo>> responseObserver =
+        TestObserver<List<GithubRepo>> responseObserver =
                 mainRepoSUT.fetchOrganizationReposFromServer(orgName).test();
 
         // Validation
@@ -91,7 +92,7 @@ public class MainRepoTest {
     public void fetchOrganizationReposFromServer_invalidRequest_returnedException() {
 
         // Trigger
-        TestObserver<ArrayList<GithubRepo>> responseObserver =
+        TestObserver<List<GithubRepo>> responseObserver =
                 apiService.fetchOrganizationRepos("").test();
 
         // Validation
@@ -115,7 +116,7 @@ public class MainRepoTest {
 
 
         // Trigger
-        TestObserver<ArrayList<GithubRepo>> responseObserver =
+        TestObserver<List<GithubRepo>> responseObserver =
                 mainRepoSUT.fetchOrganizationReposFromServer(orgName).test();
 
         // Validation

@@ -15,6 +15,7 @@ import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.model.mapped.RepoNote;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -55,7 +56,7 @@ public class MainRepoImpl implements MainRepo {
      * @return list of GithubRepo as RxJava Single Response
      */
     @Override
-    public Single<ArrayList<GithubRepo>> fetchOrganizationReposFromServer(String orgName) {
+    public Single<List<GithubRepo>> fetchOrganizationReposFromServer(String orgName) {
         return remoteDataSource.fetchOrganizationRepos(orgName);
     }
 
