@@ -91,26 +91,6 @@ public class Owner implements Parcelable {
     public Owner() {
     }
 
-    /**
-     * @param receivedEventsUrl
-     * @param siteAdmin
-     * @param followingUrl
-     * @param gistsUrl
-     * @param avatarUrl
-     * @param organizationsUrl
-     * @param reposUrl
-     * @param htmlUrl
-     * @param subscriptionsUrl
-     * @param login
-     * @param type
-     * @param url
-     * @param starredUrl
-     * @param gravatarId
-     * @param followersUrl
-     * @param id
-     * @param eventsUrl
-     * @param nodeId
-     */
     public Owner(String login, int id, String nodeId, String avatarUrl, String gravatarId, String url, String htmlUrl, String followersUrl, String followingUrl, String gistsUrl, String starredUrl, String subscriptionsUrl, String organizationsUrl, String reposUrl, String eventsUrl, String receivedEventsUrl, String type, boolean siteAdmin) {
         super();
         this.login = login;
