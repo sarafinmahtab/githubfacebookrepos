@@ -8,13 +8,14 @@ import com.android.githubfacebookrepos.dal.network.RemoteDataSource;
 import com.android.githubfacebookrepos.dal.network.RemoteDataSourceImpl;
 import com.android.githubfacebookrepos.dal.repos.MainRepo;
 import com.android.githubfacebookrepos.dal.repos.MainRepoImpl;
+import com.android.githubfacebookrepos.data.ServerConstant;
 import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.api.GithubRepo;
 import com.android.githubfacebookrepos.model.api.Owner;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.model.params.ParamFetchOrgRepo;
+import com.google.gson.GsonBuilder;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,10 +27,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 
-import io.reactivex.Single;
 import io.reactivex.android.plugins.RxAndroidPlugins;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /*
@@ -39,8 +42,6 @@ import io.reactivex.plugins.RxJavaPlugins;
 @RunWith(MockitoJUnitRunner.class)
 public class FetchOrgReposTest {
 
-    private RealmRxService realmRxService;
-    private ApiService apiService;
     private FetchOrgRepos fetchOrgReposSUT;
 
 
@@ -54,8 +55,19 @@ public class FetchOrgReposTest {
         MockitoAnnotations.initMocks(this);
 
         // Dependencies
-        apiService = Mockito.mock(ApiService.class);
-        realmRxService = new RealmRxService();
+
+        GsonConverterFactory gsonConverterFactory = GsonConverterFactory.create(
+                new GsonBuilder().disableHtmlEscaping().create()
+        );
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ServerConstant.BASE_URL)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(gsonConverterFactory)
+                .build();
+
+        ApiService apiService = retrofit.create(ApiService.class);
+        RealmRxService realmRxService = new RealmRxService();
         RemoteDataSource remoteDataSource = new RemoteDataSourceImpl(apiService);
         LocalDataSource localDataSource = new LocalDataSourceImpl(realmRxService);
         MainRepo mainRepo = new MainRepoImpl(remoteDataSource, localDataSource);
@@ -74,11 +86,6 @@ public class FetchOrgReposTest {
         // Params
         ParamFetchOrgRepo paramFetchOrgRepo = new ParamFetchOrgRepo(true, true, "facebook");
 
-        // Mock Response
-        Mockito.when(apiService.fetchOrganizationRepos(paramFetchOrgRepo.getOrgName()))
-                .thenReturn(Single.just(githubRepos));
-
-
         // Trigger
         TestObserver<ResponseHolder<ArrayList<GithubRepoMin>>> gitRepoMinTestObserver = new TestObserver<>();
 
@@ -87,7 +94,7 @@ public class FetchOrgReposTest {
                 .subscribe(gitRepoMinTestObserver);
 
         // Validation
-        Assert.assertThat(gitRepoMinTestObserver.values().get(0).getData(), CoreMatchers.is(githubRepoMins));
+        Assert.assertFalse(gitRepoMinTestObserver.values().get(0).getData().isEmpty());
         Assert.assertEquals(gitRepoMinTestObserver.values().get(0).getStatus(), ResponseHolder.Status.SUCCESS);
 
         // Clean Up
@@ -101,17 +108,12 @@ public class FetchOrgReposTest {
         // Params
         ParamFetchOrgRepo paramFetchOrgRepo = new ParamFetchOrgRepo(true, true, "facebook");
 
-        // Mock Response
-        Mockito.doReturn(
-                Single.just(githubRepos)
-        ).when(apiService).fetchOrganizationRepos(paramFetchOrgRepo.getOrgName());
-
 
         // Execution
         ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
 
         // Validation
-        Assert.assertThat(responseHolder.getData(), CoreMatchers.is(githubRepoMins));
+        Assert.assertTrue(responseHolder.getData().size() > githubRepoMins.size());
         Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.SUCCESS);
     }
 
@@ -130,55 +132,28 @@ public class FetchOrgReposTest {
     }
 
     @Test
-    public void fetchReposFromServer_validRequest_gitRepoResponseNotReturned() {
+    public void fetchReposFromServer_validRequest_gitRepoResponseNotEmpty() {
 
         // Params
         ParamFetchOrgRepo paramFetchOrgRepo = new ParamFetchOrgRepo(true, true, "facebook");
-
-        // Mock Response
-        Mockito.doReturn(
-                Single.just(githubRepos)
-        ).when(apiService).fetchOrganizationRepos(paramFetchOrgRepo.getOrgName());
 
         // Execution
         ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
 
         // Validation
-        Assert.assertThat(responseHolder.getData(), CoreMatchers.not(githubRepos));
+        Assert.assertFalse(responseHolder.getData().isEmpty());
         Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.SUCCESS);
     }
 
     @Test
-    public void fetchReposFromServer_invalidRequest_gitRepoResponseNotReturned() {
+    public void fetchReposFromServer_invalidRequest_gitRepoResponseNullReturned() {
 
         // Execution
         ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(
                 new ParamFetchOrgRepo(true, true, null));
 
         // Validation
-        Assert.assertThat(responseHolder.getData(), CoreMatchers.not(githubRepos));
-        Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.ERROR);
-    }
-
-
-    @Test
-    public void fetchReposFromServer_runtimeException_errorResponseReturned() {
-
-        RuntimeException runtimeException = new RuntimeException();
-
-        // Params
-        ParamFetchOrgRepo paramFetchOrgRepo = new ParamFetchOrgRepo(true, true, "facebook");
-
-        // Mock Response
-        Mockito.doReturn(
-                Single.error(runtimeException)
-        ).when(apiService).fetchOrganizationRepos(paramFetchOrgRepo.getOrgName());
-
-        // Execution
-        ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
-
-        // Validation
-        Assert.assertThat(responseHolder.getError(), CoreMatchers.is(runtimeException));
+        Assert.assertNull(responseHolder.getData());
         Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.ERROR);
     }
 
