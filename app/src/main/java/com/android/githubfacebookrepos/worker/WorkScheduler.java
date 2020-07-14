@@ -14,12 +14,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public final class WorkScheduler {
 
-//    public static boolean isTesting = true;
-
     public static Scheduler with(@SchedulerType int currentScheduler) {
-
-//        if (isTesting)
-//            return Schedulers.trampoline();
 
         switch (currentScheduler) {
             case SchedulerType.MAIN:

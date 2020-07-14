@@ -30,6 +30,7 @@ import io.reactivex.Single;
 import io.reactivex.android.plugins.RxAndroidPlugins;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.schedulers.Schedulers;
 
 
 /*
@@ -52,6 +53,14 @@ public class FetchOrgReposTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+
+        RxAndroidPlugins.reset();
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
+
+        RxJavaPlugins.reset();
+        RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
+        RxJavaPlugins.setComputationSchedulerHandler(scheduler -> Schedulers.trampoline());
+        RxJavaPlugins.setNewThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
 
         // Dependencies
         apiService = Mockito.mock(ApiService.class);
