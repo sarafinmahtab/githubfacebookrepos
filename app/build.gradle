@@ -85,6 +85,10 @@ android {
         unitTests.returnDefaultValues = true
     }
 
+    lintOptions {
+        abortOnError false
+    }
+
     compileOptions {
         // Flag to enable support for the new java language APIs
         coreLibraryDesugaringEnabled true
