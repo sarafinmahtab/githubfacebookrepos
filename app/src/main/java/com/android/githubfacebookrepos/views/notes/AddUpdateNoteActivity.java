@@ -13,18 +13,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.android.githubfacebookrepos.MainApplication;
 import com.android.githubfacebookrepos.R;
-import com.android.githubfacebookrepos.data.AppConstant;
 import com.android.githubfacebookrepos.databinding.ActivityAddUpdateNoteBinding;
 import com.android.githubfacebookrepos.di.ViewModelFactory;
 import com.android.githubfacebookrepos.helpers.CommonUtil;
 import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.model.mapped.RepoNote;
-import com.android.githubfacebookrepos.views.notes.dialog.AddNoteDialog;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 
 import javax.inject.Inject;
 
@@ -80,16 +74,6 @@ public class AddUpdateNoteActivity extends AppCompatActivity implements View.OnC
 
         binding.setGitRepoMin(githubRepoMin);
 
-        Glide.with(this)
-                .load(githubRepoMin.getOrgAvatarUrl())
-                .placeholder(R.drawable.ic_placeholder_repo)
-                .apply(new RequestOptions()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .format(DecodeFormat.PREFER_RGB_565)
-                        .override(AppConstant.GLIDE_ITEM_IMAGE_SIZE, AppConstant.GLIDE_ITEM_IMAGE_SIZE)
-                )
-                .into(binding.avatarImageView);
-
         binding.startAddNoteTextView.setOnClickListener(this);
 
 
@@ -116,8 +100,8 @@ public class AddUpdateNoteActivity extends AppCompatActivity implements View.OnC
                     break;
                 case ERROR:
 
-                    String warningMessage = CommonUtil.prepareErrorMessage(repoNoteResponseHolder.getError());
-                    Log.w(TAG, warningMessage);
+                    String logMessage = CommonUtil.getErrorMessage(repoNoteResponseHolder.getError());
+                    Log.w(TAG, logMessage);
 
                     break;
             }
@@ -148,7 +132,8 @@ public class AddUpdateNoteActivity extends AppCompatActivity implements View.OnC
     private void setUpToolbar() {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(getString(R.string.title_notes));
+            getSupportActionBar().setTitle(githubRepoMin.getRepoName());
+            getSupportActionBar().setSubtitle(getString(R.string.repo_by_org, githubRepoMin.getOrgName()));
         }
     }
 

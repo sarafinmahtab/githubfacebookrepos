@@ -1,16 +1,20 @@
-package com.android.githubfacebookrepos.views.notes.dialog;
+package com.android.githubfacebookrepos.views.notes;
 
 /*
  * Created by Arafin Mahtab on 6/21/20.
  */
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 
 import com.android.githubfacebookrepos.R;
@@ -19,6 +23,7 @@ import com.android.githubfacebookrepos.helpers.CommonUtil;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.UUID;
+
 
 public class AddNoteDialog extends BottomSheetDialogFragment {
 
@@ -45,9 +50,10 @@ public class AddNoteDialog extends BottomSheetDialogFragment {
 
     private String noteId;
     private String currentNote;
+    private String editedNote;
+    private boolean alreadySaving = false;
 
     private DialogAddNoteBinding binding;
-    private NoteObservableField noteObservableField;
 
     private AddNoteListener addNoteListener;
 
@@ -67,28 +73,67 @@ public class AddNoteDialog extends BottomSheetDialogFragment {
         noteId = (noteId == null || noteId.isEmpty()) ? UUID.randomUUID().toString() : noteId;
         currentNote = (currentNote == null || currentNote.isEmpty()) ? "" : currentNote;
 
-        noteObservableField = new NoteObservableField();
-
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_add_note, container, false);
-        binding.setNoteObservableField(noteObservableField);
-        noteObservableField.setNote(currentNote);
+        binding.noteEditText.setText(currentNote);
 
         if (getActivity() != null) {
             CommonUtil.showSoftKeyboardForced(getActivity(), binding.noteEditText);
         }
 
+
+        binding.noteEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                editedNote = s.toString().trim();
+
+                binding.addNoteImageView.setVisibility(
+                        editedNote.isEmpty() || editedNote.equals(currentNote) ?
+                                View.GONE : View.VISIBLE
+                );
+            }
+        });
+
+
         binding.addNoteImageView.setOnClickListener(v -> {
-            String note = noteObservableField.getNote().get() != null ? noteObservableField.getNote().get() : currentNote;
+            String note = editedNote != null ? editedNote : currentNote;
             if (note == null || note.isEmpty()) {
                 binding.noteEditText.setError(getString(R.string.empty_note_error));
             } else {
                 addNoteListener.onAddNote(noteId, note);
+                alreadySaving = true;
                 dismiss();
             }
         });
 
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        if (getContext() != null && editedNote != null && !editedNote.isEmpty() && !alreadySaving) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+            alertDialogBuilder.setMessage(R.string.alert_dialog_message)
+                    .setPositiveButton(R.string.yes, (dialog1, which) -> {
+                        addNoteListener.onAddNote(noteId, editedNote);
+                        dismiss();
+                    })
+                    .setNegativeButton(R.string.no, (dialog12, which) -> dismiss());
+
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
     }
 
     public interface AddNoteListener {

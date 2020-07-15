@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.android.githubfacebookrepos.base.SingleUseCase;
 import com.android.githubfacebookrepos.dal.repos.MainRepo;
+import com.android.githubfacebookrepos.di.ActivityScope;
 import com.android.githubfacebookrepos.helpers.CommonUtil;
 import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
@@ -28,6 +29,7 @@ import retrofit2.HttpException;
 /**
  * Dedicated UseCase Business logic responsible for fetching github organization repos
  */
+@ActivityScope
 public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHolder<ArrayList<GithubRepoMin>>> {
 
     private final String TAG = this.getClass().getName();
@@ -106,7 +108,7 @@ public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHold
             }
 
         } catch (Exception e) {
-            String error = CommonUtil.prepareErrorMessage(e);
+            String error = CommonUtil.getErrorMessage(e);
             Log.w(TAG, error);
             return Single.just(ResponseHolder.error(e));
         }

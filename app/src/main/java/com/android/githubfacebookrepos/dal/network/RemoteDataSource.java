@@ -6,11 +6,11 @@ package com.android.githubfacebookrepos.dal.network;
 
 import com.android.githubfacebookrepos.model.api.GithubRepo;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Single;
 
 public interface RemoteDataSource {
 
-    Single<ArrayList<GithubRepo>> fetchOrganizationRepos(String orgName);
+    Single<List<GithubRepo>> fetchOrganizationRepos(String orgName);
 }

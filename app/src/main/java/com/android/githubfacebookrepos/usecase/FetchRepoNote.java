@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.android.githubfacebookrepos.base.ObservableUseCase;
 import com.android.githubfacebookrepos.dal.repos.MainRepo;
+import com.android.githubfacebookrepos.di.ActivityScope;
 import com.android.githubfacebookrepos.helpers.CommonUtil;
 import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.mapped.RepoNote;
@@ -18,6 +19,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 
+@ActivityScope
 public class FetchRepoNote extends ObservableUseCase<Integer, ResponseHolder<RepoNote>> {
 
     private final String TAG = this.getClass().getName();
@@ -38,7 +40,7 @@ public class FetchRepoNote extends ObservableUseCase<Integer, ResponseHolder<Rep
         try {
             return mainRepo.fetchRepoNote(integer);
         } catch (Exception e) {
-            String error = CommonUtil.prepareErrorMessage(e);
+            String error = CommonUtil.getErrorMessage(e);
             Log.w(TAG, error);
             return Observable.just(ResponseHolder.error(e));
         }

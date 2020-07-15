@@ -10,6 +10,7 @@ import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.model.mapped.RepoNote;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -17,7 +18,7 @@ import io.reactivex.Single;
 
 public interface MainRepo {
 
-    Single<ArrayList<GithubRepo>> fetchOrganizationReposFromServer(String orgName);
+    Single<List<GithubRepo>> fetchOrganizationReposFromServer(String orgName);
 
     Single<ArrayList<GithubRepoMin>> fetchCachedOrganizationRepos(String orgName);
 

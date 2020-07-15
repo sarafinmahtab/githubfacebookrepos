@@ -8,13 +8,13 @@ package com.android.githubfacebookrepos.views.main;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android.githubfacebookrepos.MainApplication;
@@ -27,6 +27,8 @@ import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.views.main.adapter.GitReposAdapter;
 import com.android.githubfacebookrepos.views.notes.AddUpdateNoteActivity;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 
 import java.util.ArrayList;
 
@@ -65,10 +67,16 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         // Initializing viewModel from injected ViewModelFactory
         viewModel = new ViewModelProvider(this, viewModelFactory).get(MainViewModel.class);
 
-        adapter = new GitReposAdapter(this);
+        RequestManager glideRequestManager = Glide.with(this);
+        adapter = new GitReposAdapter(glideRequestManager, this);
 
         // Initializing Views with DataBinding
-        binding.gitRepoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        binding.gitRepoRecyclerView.setLayoutManager(layoutManager);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, layoutManager.getOrientation());
+        binding.gitRepoRecyclerView.addItemDecoration(dividerItemDecoration);
+
         binding.gitRepoRecyclerView.setAdapter(adapter);
 
 
@@ -92,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
             case LOADING:
 
                 binding.progressBar.setVisibility(View.VISIBLE);
+                binding.emptyViewGroup.setVisibility(View.GONE);
 
                 break;
             case SUCCESS:
@@ -99,15 +108,25 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
                 adapter.submitRepoList(orgRepoListResponseHolder.getData());
                 binding.progressBar.setVisibility(View.GONE);
 
+                binding.emptyViewGroup.setVisibility(
+                        orgRepoListResponseHolder.getData().isEmpty() ?
+                                View.VISIBLE :
+                                View.GONE);
+
+                binding.emptyTextView.setText(getString(R.string.no_repo_found));
+
                 break;
             case ERROR:
 
                 adapter.submitRepoList(new ArrayList<>());
                 binding.progressBar.setVisibility(View.GONE);
+                binding.emptyViewGroup.setVisibility(View.VISIBLE);
 
-                String warningMessage = CommonUtil.prepareErrorMessage(orgRepoListResponseHolder.getError());
-                Log.w(TAG, warningMessage);
-                Toast.makeText(this, warningMessage, Toast.LENGTH_LONG).show();
+                String logMessage = CommonUtil.getErrorMessage(orgRepoListResponseHolder.getError());
+                Log.w(TAG, logMessage);
+
+                String errorMessage = CommonUtil.prepareErrorMessage(this, orgRepoListResponseHolder.getError());
+                binding.emptyTextView.setText(errorMessage);
 
                 break;
         }

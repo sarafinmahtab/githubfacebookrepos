@@ -8,12 +8,14 @@ import android.util.Log;
 
 import com.android.githubfacebookrepos.dal.db.LocalDataSource;
 import com.android.githubfacebookrepos.dal.network.RemoteDataSource;
+import com.android.githubfacebookrepos.di.AppScope;
 import com.android.githubfacebookrepos.helpers.ResponseHolder;
 import com.android.githubfacebookrepos.model.api.GithubRepo;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.model.mapped.RepoNote;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -21,7 +23,7 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 
-
+@AppScope
 public class MainRepoImpl implements MainRepo {
 
     private final String TAG = this.getClass().getName();
@@ -54,7 +56,7 @@ public class MainRepoImpl implements MainRepo {
      * @return list of GithubRepo as RxJava Single Response
      */
     @Override
-    public Single<ArrayList<GithubRepo>> fetchOrganizationReposFromServer(String orgName) {
+    public Single<List<GithubRepo>> fetchOrganizationReposFromServer(String orgName) {
         return remoteDataSource.fetchOrganizationRepos(orgName);
     }
 

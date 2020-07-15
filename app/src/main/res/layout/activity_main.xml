@@ -29,6 +29,43 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/emptyImageView"
+            android:layout_width="0dp"
+            android:layout_height="54dp"
+            android:src="@drawable/ic_placeholder_repo"
+            android:tint="@color/textColorBlack"
+            app:layout_constraintBottom_toTopOf="@+id/emptyTextView"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="@+id/emptyTextView"
+            app:layout_constraintStart_toStartOf="@+id/emptyTextView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/emptyTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:textColor="@color/textColorBlack"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emptyImageView"
+            tools:text="Possible network failure" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/emptyViewGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="emptyImageView,emptyTextView" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

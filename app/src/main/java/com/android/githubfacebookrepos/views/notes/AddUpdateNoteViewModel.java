@@ -12,8 +12,6 @@ import com.android.githubfacebookrepos.model.mapped.RepoNote;
 import com.android.githubfacebookrepos.usecase.AddUpdateNote;
 import com.android.githubfacebookrepos.usecase.FetchRepoNote;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 
 import io.reactivex.observers.DisposableObserver;
@@ -37,7 +35,7 @@ public class AddUpdateNoteViewModel extends ViewModel {
 
         repoNoteLiveData.setValue(ResponseHolder.loading());
 
-        RepoNote repoNote = new RepoNote(noteId, note, new Date().getTime(), repoId);
+        RepoNote repoNote = new RepoNote(noteId, note, System.currentTimeMillis(), repoId);
 
         addUpdateNote.execute(repoNote, new DisposableSingleObserver<ResponseHolder<RepoNote>>() {
             @Override
