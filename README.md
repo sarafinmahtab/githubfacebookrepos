@@ -1,5 +1,7 @@
 # Github Facebook Repo
 
+[![Build Status](https://travis-ci.com/sarafinmahtab/GithubFacebookRepos.svg?branch=master)](https://travis-ci.com/sarafinmahtab/GithubFacebookRepos)
+
 ## Features
 
 Github Facebook Repos is a basic demo app focusing best practices of Android App Development.
