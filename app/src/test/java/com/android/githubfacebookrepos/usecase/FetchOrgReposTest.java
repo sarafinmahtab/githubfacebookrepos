@@ -15,14 +15,12 @@ import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.model.params.ParamFetchOrgRepo;
 
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 
@@ -30,13 +28,13 @@ import io.reactivex.Single;
 import io.reactivex.android.plugins.RxAndroidPlugins;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.schedulers.Schedulers;
 
 
 /*
  * Created by Arafin Mahtab on 6/22/20.
  */
 
-@RunWith(MockitoJUnitRunner.class)
 public class FetchOrgReposTest {
 
     private RealmRxService realmRxService;
@@ -51,7 +49,14 @@ public class FetchOrgReposTest {
 
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+
+        RxAndroidPlugins.reset();
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
+
+        RxJavaPlugins.reset();
+        RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
+        RxJavaPlugins.setComputationSchedulerHandler(scheduler -> Schedulers.trampoline());
+        RxJavaPlugins.setNewThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
 
         // Dependencies
         apiService = Mockito.mock(ApiService.class);
@@ -87,7 +92,7 @@ public class FetchOrgReposTest {
                 .subscribe(gitRepoMinTestObserver);
 
         // Validation
-        Assert.assertThat(gitRepoMinTestObserver.values().get(0).getData(), CoreMatchers.is(githubRepoMins));
+        MatcherAssert.assertThat(gitRepoMinTestObserver.values().get(0).getData(), CoreMatchers.is(githubRepoMins));
         Assert.assertEquals(gitRepoMinTestObserver.values().get(0).getStatus(), ResponseHolder.Status.SUCCESS);
 
         // Clean Up
@@ -111,7 +116,7 @@ public class FetchOrgReposTest {
         ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
 
         // Validation
-        Assert.assertThat(responseHolder.getData(), CoreMatchers.is(githubRepoMins));
+        MatcherAssert.assertThat(responseHolder.getData(), CoreMatchers.is(githubRepoMins));
         Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.SUCCESS);
     }
 
@@ -131,7 +136,7 @@ public class FetchOrgReposTest {
         ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
 
         // Validation
-        Assert.assertEquals(responseHolder.getData(), githubRepoMins);
+        MatcherAssert.assertThat(responseHolder.getData(), CoreMatchers.is(githubRepoMins));
         Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.SUCCESS);
     }
 
@@ -150,7 +155,7 @@ public class FetchOrgReposTest {
         ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
 
         // Validation
-        Assert.assertThat(responseHolder.getData(), CoreMatchers.not(githubRepos));
+        MatcherAssert.assertThat(responseHolder.getData(), CoreMatchers.not(githubRepos));
         Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.SUCCESS);
     }
 
@@ -170,7 +175,7 @@ public class FetchOrgReposTest {
                 new ParamFetchOrgRepo(true, true, null));
 
         // Validation
-        Assert.assertThat(responseHolder.getData(), CoreMatchers.not(githubRepos));
+        MatcherAssert.assertThat(responseHolder.getData(), CoreMatchers.not(githubRepos));
         Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.ERROR);
     }
 
@@ -192,7 +197,7 @@ public class FetchOrgReposTest {
         ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
 
         // Validation
-        Assert.assertThat(responseHolder.getError(), CoreMatchers.is(runtimeException));
+        MatcherAssert.assertThat(responseHolder.getError(), CoreMatchers.is(runtimeException));
         Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.ERROR);
     }
 
