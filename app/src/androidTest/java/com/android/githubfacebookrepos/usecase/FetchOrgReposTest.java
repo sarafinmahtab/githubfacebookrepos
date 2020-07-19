@@ -1,8 +1,8 @@
 package com.android.githubfacebookrepos.usecase;
 
+import com.android.githubfacebookrepos.dal.db.InMemoryRealmService;
 import com.android.githubfacebookrepos.dal.db.LocalDataSource;
-import com.android.githubfacebookrepos.dal.db.LocalDataSourceImpl;
-import com.android.githubfacebookrepos.dal.db.RealmRxService;
+import com.android.githubfacebookrepos.dal.db.MockLocalDataSourceImpl;
 import com.android.githubfacebookrepos.dal.network.ApiService;
 import com.android.githubfacebookrepos.dal.network.RemoteDataSource;
 import com.android.githubfacebookrepos.dal.network.RemoteDataSourceImpl;
@@ -14,11 +14,11 @@ import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.model.params.ParamFetchOrgRepo;
 import com.google.gson.GsonBuilder;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 
@@ -38,6 +38,7 @@ public class FetchOrgReposTest {
 
     private FetchOrgRepos fetchOrgReposSUT;
 
+    private InMemoryRealmService inMemoryRealmService;
 
     @Before
     public void setUp() throws Exception {
@@ -55,12 +56,13 @@ public class FetchOrgReposTest {
                 .build();
 
         ApiService apiService = retrofit.create(ApiService.class);
-        RealmRxService realmRxService = new RealmRxService();
+
+        inMemoryRealmService = new InMemoryRealmService();
         RemoteDataSource remoteDataSource = new RemoteDataSourceImpl(apiService);
-        LocalDataSource localDataSource = new LocalDataSourceImpl(realmRxService);
+        LocalDataSource localDataSource = new MockLocalDataSourceImpl(inMemoryRealmService);
         MainRepo mainRepo = new MainRepoImpl(remoteDataSource, localDataSource);
 
-        SaveOrgRepos saveOrgRepos = Mockito.mock(SaveOrgRepos.class);
+        SaveOrgRepos saveOrgRepos = new SaveOrgRepos(mainRepo);
         fetchOrgReposSUT = new FetchOrgRepos(mainRepo, saveOrgRepos);
     }
 
@@ -79,7 +81,7 @@ public class FetchOrgReposTest {
                 .subscribe(gitRepoMinTestObserver);
 
         // Validation
-        Assert.assertEquals(gitRepoMinTestObserver.values().get(0).getStatus(), ResponseHolder.Status.SUCCESS);
+        Assert.assertEquals(ResponseHolder.Status.SUCCESS, gitRepoMinTestObserver.values().get(0).getStatus());
 
         // Clean Up
         gitRepoMinTestObserver.dispose();
@@ -97,7 +99,7 @@ public class FetchOrgReposTest {
         ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
 
         // Validation
-        Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.SUCCESS);
+        Assert.assertEquals(ResponseHolder.Status.SUCCESS, responseHolder.getStatus());
     }
 
     @Test
@@ -110,7 +112,7 @@ public class FetchOrgReposTest {
         ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
 
         // Validation with actual data
-        Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.SUCCESS);
+        Assert.assertEquals(ResponseHolder.Status.SUCCESS, responseHolder.getStatus());
     }
 
     @Test
@@ -123,7 +125,7 @@ public class FetchOrgReposTest {
         ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
 
         // Validation
-        Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.SUCCESS);
+        Assert.assertEquals(ResponseHolder.Status.SUCCESS, responseHolder.getStatus());
     }
 
     @Test
@@ -135,7 +137,12 @@ public class FetchOrgReposTest {
 
         // Validation
         Assert.assertNull(responseHolder.getData());
-        Assert.assertEquals(responseHolder.getStatus(), ResponseHolder.Status.ERROR);
+        Assert.assertEquals(ResponseHolder.Status.ERROR, responseHolder.getStatus());
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        inMemoryRealmService.close();
     }
 
     @AfterClass
