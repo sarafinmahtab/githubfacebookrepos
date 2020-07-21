@@ -72,7 +72,9 @@ public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHold
                                             githubRepo.isFork())
                                     ).collect(Collectors.toCollection(ArrayList::new));
 
-                            saveOrgReposUseCase.execute(githubRepoMinArrayList);
+                            if (paramFetchOrgRepo.isShouldCacheResponse()) {
+                                saveOrgReposUseCase.execute(githubRepoMinArrayList);
+                            }
 
                             return ResponseHolder.success(githubRepoMinArrayList);
                         })
