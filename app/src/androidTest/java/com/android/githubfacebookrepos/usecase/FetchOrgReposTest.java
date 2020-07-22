@@ -10,6 +10,8 @@ import com.android.githubfacebookrepos.dal.repos.MainRepo;
 import com.android.githubfacebookrepos.dal.repos.MainRepoImpl;
 import com.android.githubfacebookrepos.data.ServerConstant;
 import com.android.githubfacebookrepos.helpers.ResponseHolder;
+import com.android.githubfacebookrepos.model.api.GithubRepo;
+import com.android.githubfacebookrepos.model.api.Owner;
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 import com.android.githubfacebookrepos.model.params.ParamFetchOrgRepo;
 import com.google.gson.GsonBuilder;
@@ -37,13 +39,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class FetchOrgReposTest {
 
     private FetchOrgRepos fetchOrgReposSUT;
+    private SaveOrgRepos saveOrgRepos;
 
     private InMemoryRealmService inMemoryRealmService;
+
+    private GithubRepoMin githubRepoMin;
 
     @Before
     public void setUp() throws Exception {
 
         // Dependencies
+        prepareGithubRepoData();
 
         GsonConverterFactory gsonConverterFactory = GsonConverterFactory.create(
                 new GsonBuilder().disableHtmlEscaping().create()
@@ -62,7 +68,7 @@ public class FetchOrgReposTest {
         LocalDataSource localDataSource = new MockLocalDataSourceImpl(inMemoryRealmService);
         MainRepo mainRepo = new MainRepoImpl(remoteDataSource, localDataSource);
 
-        SaveOrgRepos saveOrgRepos = new SaveOrgRepos(mainRepo);
+        saveOrgRepos = new SaveOrgRepos(mainRepo);
         fetchOrgReposSUT = new FetchOrgRepos(mainRepo, saveOrgRepos);
     }
 
@@ -116,16 +122,27 @@ public class FetchOrgReposTest {
     }
 
     @Test
-    public void fetchReposFromServer_validRequest_gitRepoResponseNotEmpty() {
+    public void fetchCachedRepos_newRepoAdd_validNumberOfRepoReturned() {
 
         // Params
-        ParamFetchOrgRepo paramFetchOrgRepo = new ParamFetchOrgRepo(true, true, "facebook");
+        ParamFetchOrgRepo paramFetchOrgRepo = new ParamFetchOrgRepo(true, false, "facebook");
 
         // Execution
-        ResponseHolder<ArrayList<GithubRepoMin>> responseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
+        ResponseHolder<ArrayList<GithubRepoMin>> oldResponseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
 
         // Validation
-        Assert.assertEquals(ResponseHolder.Status.SUCCESS, responseHolder.getStatus());
+        Assert.assertEquals(ResponseHolder.Status.SUCCESS, oldResponseHolder.getStatus());
+
+        // New Repo Insertion
+        ArrayList<GithubRepoMin> githubRepoMins = new ArrayList<>();
+        githubRepoMins.add(githubRepoMin);
+        saveOrgRepos.execute(githubRepoMins);
+
+        // Execution
+        ResponseHolder<ArrayList<GithubRepoMin>> newResponseHolder = fetchOrgReposSUT.executeImmediate(paramFetchOrgRepo);
+
+        // Validation
+        Assert.assertEquals(oldResponseHolder.getData().size() + githubRepoMins.size(), newResponseHolder.getData().size());
     }
 
     @Test
@@ -138,6 +155,38 @@ public class FetchOrgReposTest {
         // Validation
         Assert.assertNull(responseHolder.getData());
         Assert.assertEquals(ResponseHolder.Status.ERROR, responseHolder.getStatus());
+    }
+
+    public void prepareGithubRepoData() {
+        Owner owner = new Owner();
+        owner.setId(1342004);
+        owner.setLogin("facebook");
+        owner.setAvatarUrl("https://avatars1.githubusercontent.com/u/1342004?v=4");
+
+        GithubRepo githubRepo = new GithubRepo();
+        githubRepo.setId(1936771);
+        githubRepo.setName("fresco");
+        githubRepo.setPrivate(false);
+        githubRepo.setOwner(owner);
+        githubRepo.setDescription("Image Caching Library for Java, Kotlin and Android");
+        githubRepo.setFork(false);
+        githubRepo.setLanguage("Java");
+        githubRepo.setUrl("https://api.github.com/repos/facebook/fresco");
+        githubRepo.setUpdatedAt("2020-07-20T16:46:31Z");
+
+
+        githubRepoMin = new GithubRepoMin(
+                githubRepo.getId(),
+                githubRepo.getName(),
+                githubRepo.isPrivate(),
+                githubRepo.getOwner().getId(),
+                githubRepo.getOwner().getLogin(),
+                githubRepo.getOwner().getAvatarUrl(),
+                githubRepo.getUpdatedAt(),
+                githubRepo.getLanguage(),
+                githubRepo.getDescription(),
+                githubRepo.isFork()
+        );
     }
 
     @After
