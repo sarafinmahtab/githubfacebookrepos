@@ -4,6 +4,7 @@ package com.android.githubfacebookrepos.di;
  * Created by Arafin Mahtab on 6/16/20.
  */
 
+
 import com.android.githubfacebookrepos.BuildConfig;
 import com.android.githubfacebookrepos.dal.network.ApiService;
 import com.android.githubfacebookrepos.data.ServerConstant;
@@ -28,7 +29,6 @@ public class NetworkModule {
     public GsonConverterFactory provideGsonConverterFactory() {
         Gson gson = new GsonBuilder()
                 .disableHtmlEscaping()
-//                .setDateFormat(DateUtils.SERVER_API_DATE_FORMAT)
                 .create();
         return GsonConverterFactory.create(gson);
     }

@@ -19,6 +19,10 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 
+
+/**
+ * Dedicated UseCase Business logic responsible to fetch repository note
+ */
 @ActivityScope
 public class FetchRepoNote extends ObservableUseCase<Integer, ResponseHolder<RepoNote>> {
 

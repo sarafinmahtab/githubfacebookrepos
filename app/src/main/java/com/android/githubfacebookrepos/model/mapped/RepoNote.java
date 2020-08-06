@@ -9,12 +9,10 @@ import android.os.Parcelable;
 
 import com.android.githubfacebookrepos.helpers.DateUtils;
 
-import java.util.UUID;
-
 import io.realm.RealmObject;
-import io.realm.annotations.Ignore;
 import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
+
 
 /**
  * Repo Note model keeps note corresponding to repoId
@@ -33,9 +31,6 @@ public class RepoNote extends RealmObject implements Parcelable {
     private int repoId;
 
 
-    /**
-     * Public constructor with no arguments
-     */
     public RepoNote() {
     }
 

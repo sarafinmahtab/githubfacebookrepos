@@ -14,5 +14,5 @@ public final class AppConstant {
 
     public static final int GLIDE_ITEM_IMAGE_SIZE = 100;
 
-    public static boolean offlineModeEnabled = true;
+    public static boolean OFFLINE_MODE_ENABLED = true;
 }

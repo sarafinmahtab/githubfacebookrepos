@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import com.android.githubfacebookrepos.model.mapped.GithubRepoMin;
 
+
 public class GitRepoDiffUtil extends DiffUtil.ItemCallback<GithubRepoMin> {
 
     @Override

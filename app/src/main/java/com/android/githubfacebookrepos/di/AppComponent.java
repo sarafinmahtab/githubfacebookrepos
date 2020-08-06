@@ -13,10 +13,12 @@ import com.android.githubfacebookrepos.views.notes.AddUpdateNoteComponent;
 import dagger.BindsInstance;
 import dagger.Component;
 
-// Scope annotation that the AppComponent uses
-// Classes annotated with @ApplicationScope will have a unique instance in this Component
+
+/**
+ * Scope annotation that the AppComponent uses
+ * Classes annotated with @ApplicationScope will have a unique instance in this Component
+ */
 @AppScope
-// Definition of a Dagger component that adds info from the different modules to the graph
 @Component(
         modules = {
                 DatabaseModule.class,
@@ -29,7 +31,6 @@ import dagger.Component;
 )
 public interface AppComponent {
 
-    // Factory to create instances of the AppComponent
     @Component.Factory
     interface Factory {
         /**
@@ -38,7 +39,7 @@ public interface AppComponent {
         AppComponent create(@BindsInstance Context context);
     }
 
-    // Types that can be retrieved from the graph
+    // Component Graph
     MainComponent.Factory mainComponent();
 
     AddUpdateNoteComponent.Factory addUpdateNoteComponent();

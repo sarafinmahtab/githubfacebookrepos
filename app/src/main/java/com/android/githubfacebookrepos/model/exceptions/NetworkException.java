@@ -5,7 +5,7 @@ package com.android.githubfacebookrepos.model.exceptions;
  */
 
 /**
- * LocalException used for readability of network error
+ * Used for readability of network error
  */
 public class NetworkException extends Exception {
 

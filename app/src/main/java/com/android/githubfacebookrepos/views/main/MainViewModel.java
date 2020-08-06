@@ -19,6 +19,7 @@ import javax.inject.Inject;
 
 import io.reactivex.observers.DisposableSingleObserver;
 
+
 public class MainViewModel extends ViewModel {
 
     private FetchOrgRepos fetchOrgReposUseCase;
@@ -30,18 +31,13 @@ public class MainViewModel extends ViewModel {
         this.fetchOrgReposUseCase = fetchOrgRepos;
     }
 
-    /**
-     * Execute [FetchOrgRepos] use case and observed by orgRepoListLiveData when any response returned
-     *
-     * @param orgName               organization name as path require to load repositories of that organization
-     * @param isConnectionAvailable check connectivity before requesting any network request
-     */
-    public void fetchGithubRepos(String orgName, boolean isConnectionAvailable) {
+
+    public void fetchGithubRepos(String orgName, boolean isNetworkConnectionAvailable) {
 
         orgRepoListLiveData.postValue(ResponseHolder.loading());
 
         fetchOrgReposUseCase.execute(
-                new ParamFetchOrgRepo(AppConstant.offlineModeEnabled, isConnectionAvailable, orgName),
+                new ParamFetchOrgRepo(AppConstant.OFFLINE_MODE_ENABLED, isNetworkConnectionAvailable, orgName),
                 new DisposableSingleObserver<ResponseHolder<ArrayList<GithubRepoMin>>>() {
                     @Override
                     public void onSuccess(ResponseHolder<ArrayList<GithubRepoMin>> gitRepoListResponseHolder) {
@@ -62,7 +58,7 @@ public class MainViewModel extends ViewModel {
     @Override
     protected void onCleared() {
 
-        // Disposing All UseCases before ViewModel is cleared
+        // Rechecking All RxUseCases Disposed before ViewModel is cleared
         fetchOrgReposUseCase.dispose();
 
         super.onCleared();

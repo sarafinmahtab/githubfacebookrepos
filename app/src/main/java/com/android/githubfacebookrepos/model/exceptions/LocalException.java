@@ -5,7 +5,7 @@ package com.android.githubfacebookrepos.model.exceptions;
  */
 
 /**
- * LocalException used for readability of internal error
+ * Used for readability of internal error
  */
 public class LocalException extends Exception {
 
