@@ -7,7 +7,7 @@ def keystoreProperties = new Properties()
 def isCI = System.getenv("TRAVIS")
 if (isCI) {
     keystoreProperties.setProperty("keyAlias", System.getenv("keyAlias"))
-    keystoreProperties.setProperty("storeFile", System.getenv("storeFile"))
+    keystoreProperties.setProperty("keyPassword", System.getenv("keyPassword"))
     keystoreProperties.setProperty("storeFile", System.getenv("storeFile"))
     keystoreProperties.setProperty("storePassword", System.getenv("storePassword"))
 } else {
