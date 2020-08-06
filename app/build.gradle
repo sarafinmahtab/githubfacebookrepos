@@ -1,6 +1,21 @@
 apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
 
+// Load keystore
+def keystoreProperties = new Properties()
+
+def isCI = System.getenv("TRAVIS")
+if (isCI) {
+    keystoreProperties.setProperty("keyAlias", System.getenv("keyAlias"))
+    keystoreProperties.setProperty("storeFile", System.getenv("storeFile"))
+    keystoreProperties.setProperty("storeFile", System.getenv("storeFile"))
+    keystoreProperties.setProperty("storePassword", System.getenv("storePassword"))
+} else {
+    def keystorePropertiesFile = rootProject.file("keystore.properties")
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -32,10 +47,10 @@ android {
         }
 
         release {
-            storeFile file("keys/production.jks")
-            storePassword '123345'
-            keyAlias 'key0'
-            keyPassword '123345'
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
         }
     }
 
@@ -101,16 +116,17 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
 
-    implementation 'androidx.core:core-ktx:1.3.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.core:core-ktx:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.multidex:multidex:2.0.1'
 
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.google.android.material:material:1.2.0'
     implementation 'com.google.code.gson:gson:2.8.6'
+
     implementation 'com.google.dagger:dagger:2.28.1'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.28.1'
 
