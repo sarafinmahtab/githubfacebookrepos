@@ -9,6 +9,7 @@ import dagger.Module;
 @Module
 public class DatabaseModule {
 
+    //TODO: Fix Realm Initialize with Dagger
     /*
     @AppScope
     @Provides

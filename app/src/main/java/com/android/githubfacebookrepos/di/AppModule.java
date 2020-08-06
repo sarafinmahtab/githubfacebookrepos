@@ -12,18 +12,16 @@ import com.android.githubfacebookrepos.dal.network.RemoteDataSourceImpl;
 import dagger.Binds;
 import dagger.Module;
 
-// Tells Dagger this is a Dagger module
+
 @Module
 public abstract class AppModule {
 
     @AppScope
-    // Makes Dagger provide RemoteDataSourceImpl when a RemoteDataSource type is requested
     @Binds
     public abstract RemoteDataSource providesRemoteDataSource(RemoteDataSourceImpl remoteDataSourceImpl);
 
 
     @AppScope
-    // Makes Dagger provide LocalDataSourceImpl when a LocalDataSource type is requested
     @Binds
     public abstract LocalDataSource providesLocalDataSource(LocalDataSourceImpl localDataSourceImpl);
 }

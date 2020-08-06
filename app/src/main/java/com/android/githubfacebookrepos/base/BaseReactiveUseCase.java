@@ -12,6 +12,7 @@ import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
+
 public abstract class BaseReactiveUseCase {
 
     protected Scheduler threadExecutorScheduler =

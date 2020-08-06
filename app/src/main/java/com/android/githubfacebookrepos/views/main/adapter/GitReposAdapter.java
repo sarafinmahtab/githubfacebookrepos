@@ -25,6 +25,7 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
+
 public class GitReposAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private RequestManager glideRequestManager;

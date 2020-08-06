@@ -22,9 +22,7 @@ import com.android.githubfacebookrepos.model.mapped.RepoNote;
 
 import javax.inject.Inject;
 
-/**
- * Activity which will show add or update note of the repo
- */
+
 public class AddUpdateNoteActivity extends AppCompatActivity implements View.OnClickListener, AddNoteDialog.AddNoteListener {
 
     private static final String EXTRA_GIT_REPO = "GitRepoMin";
@@ -62,15 +60,11 @@ public class AddUpdateNoteActivity extends AppCompatActivity implements View.OnC
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_update_note);
 
-        // Injecting Activity from AppComponent hierarchy
         MainApplication application = (MainApplication) getApplicationContext();
         application.getAppComponent().addUpdateNoteComponent().create().inject(this);
 
-        // Initializing viewModel from injected ViewModelFactory
         viewModel = new ViewModelProvider(this, viewModelFactory).get(AddUpdateNoteViewModel.class);
 
-
-        // Update Views
 
         binding.setGitRepoMin(githubRepoMin);
 
@@ -78,7 +72,6 @@ public class AddUpdateNoteActivity extends AppCompatActivity implements View.OnC
 
 
         viewModel.repoNoteLiveData.observe(this, repoNoteObserver);
-
 
         viewModel.fetchRepoNote(githubRepoMin.getRepoId());
     }

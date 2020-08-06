@@ -9,7 +9,10 @@ import com.android.githubfacebookrepos.views.notes.AddUpdateNoteComponent;
 
 import dagger.Module;
 
-// This module tells a Component which are its sub-components
+
+/**
+ * This module tells a Component which are its sub-components
+ */
 @Module(
         subcomponents = {
                 MainComponent.class,

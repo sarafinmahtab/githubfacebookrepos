@@ -19,6 +19,10 @@ import javax.inject.Inject;
 
 import io.reactivex.Single;
 
+
+/**
+ * Dedicated UseCase Business logic responsible to add note locally for a repository
+ */
 @ActivityScope
 public class AddUpdateNote extends SingleUseCase<RepoNote, ResponseHolder<RepoNote>> {
 

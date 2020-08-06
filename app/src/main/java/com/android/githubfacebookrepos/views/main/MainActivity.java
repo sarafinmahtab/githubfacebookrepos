@@ -1,10 +1,5 @@
 package com.android.githubfacebookrepos.views.main;
 
-/*
- * Created by Arafin Mahtab on 6/15/20.
- */
-
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,9 +30,6 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 
-/**
- * Activity which will show the list of Github facebook repos
- */
 public class MainActivity extends AppCompatActivity implements ItemClickListener {
 
     private final String TAG = this.getClass().getName();
@@ -60,17 +52,14 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        // Injecting Activity from AppComponent hierarchy
         MainApplication application = (MainApplication) getApplicationContext();
         application.getAppComponent().mainComponent().create().inject(this);
 
-        // Initializing viewModel from injected ViewModelFactory
         viewModel = new ViewModelProvider(this, viewModelFactory).get(MainViewModel.class);
 
         RequestManager glideRequestManager = Glide.with(this);
         adapter = new GitReposAdapter(glideRequestManager, this);
 
-        // Initializing Views with DataBinding
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.gitRepoRecyclerView.setLayoutManager(layoutManager);
 
@@ -80,9 +69,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         binding.gitRepoRecyclerView.setAdapter(adapter);
 
 
-        // Initializing Observers before fetching data
         viewModel.orgRepoListLiveData.observe(this, orgRepoListObserver);
-
 
         viewModel.fetchGithubRepos(orgRepoName, CommonUtil.isNetworkConnectionAvailable(this));
     }

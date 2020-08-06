@@ -53,8 +53,6 @@ public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHold
         try {
             if (paramFetchOrgRepo.isNetworkConnectionAvailable()) {
 
-                // Loading GithubRepo Data from server and mapped to secondary object GithubRepoMin
-
                 return mainRepo.fetchOrganizationReposFromServer(paramFetchOrgRepo.getOrgName())
                         .map(githubRepos -> {
 
@@ -102,7 +100,6 @@ public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHold
                             }
                         });
             } else {
-                // Loading cached GithubRepoMin data as there is no available internet connection
 
                 return mainRepo.fetchCachedOrganizationRepos(paramFetchOrgRepo.getOrgName())
                         .map(ResponseHolder::success)

@@ -4,9 +4,9 @@ package com.android.githubfacebookrepos.base;
  * Created by Arafin Mahtab on 6/21/20.
  */
 
-
 import io.reactivex.Observable;
 import io.reactivex.observers.DisposableObserver;
+
 
 /**
  * Abstract class for a Use Case (Interactor in terms of Clean Architecture).

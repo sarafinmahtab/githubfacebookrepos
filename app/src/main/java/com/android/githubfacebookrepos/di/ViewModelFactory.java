@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
     private Map<Class<? extends ViewModel>, Provider<ViewModel>> viewModelMap;

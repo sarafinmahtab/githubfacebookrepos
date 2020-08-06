@@ -4,7 +4,6 @@ package com.android.githubfacebookrepos;
  * Created by Arafin Mahtab on 6/15/20.
  */
 
-
 import android.app.Application;
 import android.content.Context;
 
@@ -17,6 +16,7 @@ import com.android.githubfacebookrepos.di.DaggerAppComponent;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+
 
 public class MainApplication extends Application {
 

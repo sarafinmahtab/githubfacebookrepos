@@ -23,6 +23,7 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 
+
 @AppScope
 public class MainRepoImpl implements MainRepo {
 
@@ -34,12 +35,6 @@ public class MainRepoImpl implements MainRepo {
     private MainRepoImpl() {
     }
 
-    /**
-     * Inject tells Dagger how to provide instances of this type
-     *
-     * @param remoteDataSource This instance will be provided by dagger
-     * @param localDataSource  This instance will be provided by dagger
-     */
     @Inject
     public MainRepoImpl(
             RemoteDataSource remoteDataSource,
@@ -49,23 +44,11 @@ public class MainRepoImpl implements MainRepo {
         this.localDataSource = localDataSource;
     }
 
-    /**
-     * Fetch Organization repos from server
-     *
-     * @param orgName github organization name
-     * @return list of GithubRepo as RxJava Single Response
-     */
     @Override
     public Single<List<GithubRepo>> fetchOrganizationReposFromServer(String orgName) {
         return remoteDataSource.fetchOrganizationRepos(orgName);
     }
 
-    /**
-     * Fetch any cached organization repos response
-     *
-     * @param orgName github organization name
-     * @return list of GithubRepo as RxJava Single Response
-     */
     @Override
     public Single<ArrayList<GithubRepoMin>> fetchCachedOrganizationRepos(String orgName) {
         try {

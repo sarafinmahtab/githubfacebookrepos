@@ -12,6 +12,7 @@ import java.util.Objects;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
+
 /**
  * Minimized mapped model of Github Repo
  */
@@ -29,9 +30,6 @@ public class GithubRepoMin extends RealmObject implements Parcelable {
     private String description;
     private boolean isForked;
 
-    /**
-     * Public constructor with no arguments
-     */
     public GithubRepoMin() {
 
     }
