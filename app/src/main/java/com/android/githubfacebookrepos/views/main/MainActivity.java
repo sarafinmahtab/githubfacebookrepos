@@ -2,8 +2,11 @@ package com.android.githubfacebookrepos.views.main;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -37,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     public static final int REPO_CLICKED = 0;
 
     private String orgRepoName = "facebook";
-
 
     private GitReposAdapter adapter;
     private ActivityMainBinding binding;
@@ -82,16 +84,14 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         }
     }
 
-    private Observer<ResponseHolder<ArrayList<GithubRepoMin>>> orgRepoListObserver = orgRepoListResponseHolder -> {
+    private final Observer<ResponseHolder<ArrayList<GithubRepoMin>>> orgRepoListObserver = orgRepoListResponseHolder -> {
         switch (orgRepoListResponseHolder.getStatus()) {
             case LOADING:
-
                 binding.progressBar.setVisibility(View.VISIBLE);
                 binding.emptyViewGroup.setVisibility(View.GONE);
 
                 break;
             case SUCCESS:
-
                 adapter.submitRepoList(orgRepoListResponseHolder.getData());
                 binding.progressBar.setVisibility(View.GONE);
 
@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
 
                 break;
             case ERROR:
-
                 adapter.submitRepoList(new ArrayList<>());
                 binding.progressBar.setVisibility(View.GONE);
                 binding.emptyViewGroup.setVisibility(View.VISIBLE);
@@ -120,8 +119,27 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
     };
 
     @Override
-    protected void onDestroy() {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.make_bug) {
+            makeBug();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void makeBug() {
+        throw new RuntimeException("This is a crash");
+    }
+
+    @Override
+    protected void onDestroy() {
         viewModel.orgRepoListLiveData.removeObserver(orgRepoListObserver);
 
         super.onDestroy();

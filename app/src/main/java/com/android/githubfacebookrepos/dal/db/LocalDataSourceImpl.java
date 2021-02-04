@@ -34,11 +34,6 @@ public class LocalDataSourceImpl implements LocalDataSource {
 
     }
 
-    /**
-     * Inject tells Dagger how to provide instances of this type
-     *
-     * @param realmRxService This instance will be provided by dagger
-     */
     @Inject
     public LocalDataSourceImpl(RealmRxService realmRxService) {
         this.realmRxService = realmRxService;

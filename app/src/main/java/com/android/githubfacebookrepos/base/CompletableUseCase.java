@@ -19,20 +19,16 @@ import io.reactivex.observers.DisposableCompletableObserver;
  * This use case is to be used when we expect a Completable value to be emitted via a [Completable].
  */
 public abstract class CompletableUseCase<Params> extends BaseReactiveUseCase {
-
-
     /**
      * Builds an [Completable] which will be used when executing the current [CompletableUseCase].
      */
     protected abstract Completable buildUseCaseCompletable(Params params);
-
 
     private Completable buildUseCaseCompletableWithSchedulers(Params params) {
         return buildUseCaseCompletable(params)
                 .subscribeOn(threadExecutorScheduler)
                 .observeOn(postExecutionThreadScheduler);
     }
-
 
     /**
      * Executes the current use case.
@@ -45,7 +41,6 @@ public abstract class CompletableUseCase<Params> extends BaseReactiveUseCase {
         Completable completable = buildUseCaseCompletableWithSchedulers(params);
         addDisposable(completable.subscribeWith(observer));
     }
-
 
     /**
      * Executes the current use case. Skips the subscriber.

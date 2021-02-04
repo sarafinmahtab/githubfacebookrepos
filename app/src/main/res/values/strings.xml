@@ -18,4 +18,5 @@
     <string name="alert_dialog_message">Do you want to save current note?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="make_bug">Make Bug</string>
 </resources>

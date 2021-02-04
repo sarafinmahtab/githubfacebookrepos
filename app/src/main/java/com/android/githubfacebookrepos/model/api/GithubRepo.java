@@ -8,7 +8,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class GithubRepo implements Parcelable {
-
     @SerializedName("id")
     @Expose
     private int id;
@@ -309,9 +308,6 @@ public class GithubRepo implements Parcelable {
         this.permissions = ((Permissions) in.readValue((Permissions.class.getClassLoader())));
     }
 
-    /**
-     * No args constructor for use in serialization
-     */
     public GithubRepo() {
     }
 

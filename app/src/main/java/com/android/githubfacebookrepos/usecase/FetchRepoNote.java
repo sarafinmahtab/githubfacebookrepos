@@ -20,20 +20,15 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 
 
-/**
- * Dedicated UseCase Business logic responsible to fetch repository note
- */
 @ActivityScope
 public class FetchRepoNote extends ObservableUseCase<Integer, ResponseHolder<RepoNote>> {
 
     private final String TAG = this.getClass().getName();
 
-    private MainRepo mainRepo;
+    private final MainRepo mainRepo;
 
     @Inject
     public FetchRepoNote(MainRepo mainRepo) {
-        // Telling rx java to load this use case with looper of current thread and
-        // by default observe on main thread.
         threadExecutorScheduler = WorkScheduler.with(SchedulerType.IO);
 
         this.mainRepo = mainRepo;

@@ -19,20 +19,16 @@ import io.reactivex.observers.DisposableSingleObserver;
  * This use case is to be used when we expect a single value to be emitted via a [Single].
  */
 public abstract class SingleUseCase<Params, Results> extends BaseReactiveUseCase {
-
-
     /**
      * Builds an [Single] which will be used when executing the current [SingleUseCase].
      */
     protected abstract Single<Results> buildUseCaseSingle(Params params);
-
 
     private Single<Results> buildUseCaseSingleWithSchedulers(Params params) {
         return buildUseCaseSingle(params)
                 .subscribeOn(threadExecutorScheduler)
                 .observeOn(postExecutionThreadScheduler);
     }
-
 
     /**
      * Executes the current use case.
@@ -45,7 +41,6 @@ public abstract class SingleUseCase<Params, Results> extends BaseReactiveUseCase
         Single<Results> single = buildUseCaseSingleWithSchedulers(params);
         addDisposable(single.subscribeWith(observer));
     }
-
 
     /**
      * Executes the current use case immediately using blockingGet().

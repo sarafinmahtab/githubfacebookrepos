@@ -6,7 +6,7 @@ package com.android.githubfacebookrepos.model.params;
 
 public class ParamFetchOrgRepo extends BaseRequestParam {
 
-    private String orgName;
+    private final String orgName;
 
     public ParamFetchOrgRepo(boolean cacheResponse, boolean isNetworkAvailable, String orgName) {
         super(cacheResponse, isNetworkAvailable);

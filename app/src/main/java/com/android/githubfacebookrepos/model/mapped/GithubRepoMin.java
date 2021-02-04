@@ -13,11 +13,7 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 
-/**
- * Minimized mapped model of Github Repo
- */
 public class GithubRepoMin extends RealmObject implements Parcelable {
-
     @PrimaryKey
     private int repoId;
     private String repoName;

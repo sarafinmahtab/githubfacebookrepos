@@ -12,12 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
-    private View itemView;
-    private int viewType;
+    private final View itemView;
+    private final int viewType;
     private ItemClickListener itemClickListener;
 
     public BaseViewHolder(View itemView, int viewType) {
         super(itemView);
+
         this.itemView = itemView;
         this.viewType = viewType;
     }

@@ -19,20 +19,16 @@ import io.reactivex.observers.DisposableObserver;
  * This use case is to be used when we expect a Observable value to be emitted via a [Observable].
  */
 public abstract class ObservableUseCase<Params, Results> extends BaseReactiveUseCase {
-
-
     /**
      * Builds an [Observable] which will be used when executing the current [ObservableUseCase].
      */
     protected abstract Observable<Results> buildUseCaseObservable(Params params);
-
 
     private Observable<Results> buildUseCaseObservableWithSchedulers(Params params) {
         return buildUseCaseObservable(params)
                 .subscribeOn(threadExecutorScheduler)
                 .observeOn(postExecutionThreadScheduler);
     }
-
 
     /**
      * Executes the current use case.
@@ -45,7 +41,6 @@ public abstract class ObservableUseCase<Params, Results> extends BaseReactiveUse
         Observable<Results> observable = buildUseCaseObservableWithSchedulers(params);
         addDisposable(observable.subscribeWith(observer));
     }
-
 
     /**
      * Executes the current use case immediately using blockingGet().

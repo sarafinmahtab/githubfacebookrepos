@@ -20,20 +20,15 @@ import javax.inject.Inject;
 import io.reactivex.Single;
 
 
-/**
- * Dedicated UseCase Business logic responsible to add note locally for a repository
- */
 @ActivityScope
 public class AddUpdateNote extends SingleUseCase<RepoNote, ResponseHolder<RepoNote>> {
 
     private final String TAG = this.getClass().getName();
 
-    private MainRepo mainRepo;
+    private final MainRepo mainRepo;
 
     @Inject
     public AddUpdateNote(MainRepo mainRepo) {
-        // Telling rx java to load this use case with IO thread and
-        // by default observe on main thread.
         threadExecutorScheduler = WorkScheduler.with(SchedulerType.IO);
 
         this.mainRepo = mainRepo;
