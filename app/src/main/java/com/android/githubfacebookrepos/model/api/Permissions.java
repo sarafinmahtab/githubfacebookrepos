@@ -8,7 +8,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Permissions implements Parcelable {
-
     @SerializedName("admin")
     @Expose
     private boolean admin;
@@ -25,9 +24,6 @@ public class Permissions implements Parcelable {
         this.pull = ((boolean) in.readValue((boolean.class.getClassLoader())));
     }
 
-    /**
-     * No args constructor for use in serialization
-     */
     public Permissions() {
     }
 

@@ -12,6 +12,8 @@ import com.android.githubfacebookrepos.model.mapped.RepoNote;
 import com.android.githubfacebookrepos.usecase.AddUpdateNote;
 import com.android.githubfacebookrepos.usecase.FetchRepoNote;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.inject.Inject;
 
 import io.reactivex.observers.DisposableObserver;
@@ -20,8 +22,8 @@ import io.reactivex.observers.DisposableSingleObserver;
 
 public class AddUpdateNoteViewModel extends ViewModel {
 
-    private FetchRepoNote fetchRepoNote;
-    private AddUpdateNote addUpdateNote;
+    private final FetchRepoNote fetchRepoNote;
+    private final AddUpdateNote addUpdateNote;
 
     MutableLiveData<ResponseHolder<RepoNote>> repoNoteLiveData = new MutableLiveData<>();
 
@@ -39,14 +41,14 @@ public class AddUpdateNoteViewModel extends ViewModel {
 
         addUpdateNote.execute(repoNote, new DisposableSingleObserver<ResponseHolder<RepoNote>>() {
             @Override
-            public void onSuccess(ResponseHolder<RepoNote> repoNoteResponseHolder) {
+            public void onSuccess(@NotNull ResponseHolder<RepoNote> repoNoteResponseHolder) {
                 repoNoteLiveData.postValue(repoNoteResponseHolder);
 
                 dispose();
             }
 
             @Override
-            public void onError(Throwable e) {
+            public void onError(@NotNull Throwable e) {
                 repoNoteLiveData.postValue(ResponseHolder.error(e));
 
                 dispose();
@@ -57,12 +59,12 @@ public class AddUpdateNoteViewModel extends ViewModel {
     public void fetchRepoNote(int repoId) {
         fetchRepoNote.execute(repoId, new DisposableObserver<ResponseHolder<RepoNote>>() {
             @Override
-            public void onNext(ResponseHolder<RepoNote> repoNoteResponseHolder) {
+            public void onNext(@NotNull ResponseHolder<RepoNote> repoNoteResponseHolder) {
                 repoNoteLiveData.postValue(repoNoteResponseHolder);
             }
 
             @Override
-            public void onError(Throwable e) {
+            public void onError(@NotNull Throwable e) {
                 repoNoteLiveData.postValue(ResponseHolder.error(e));
             }
 
@@ -75,7 +77,6 @@ public class AddUpdateNoteViewModel extends ViewModel {
 
     @Override
     protected void onCleared() {
-
         fetchRepoNote.dispose();
         addUpdateNote.dispose();
 

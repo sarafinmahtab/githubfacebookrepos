@@ -85,9 +85,6 @@ public class Owner implements Parcelable {
         this.siteAdmin = ((boolean) in.readValue((boolean.class.getClassLoader())));
     }
 
-    /**
-     * No args constructor for use in serialization
-     */
     public Owner() {
     }
 

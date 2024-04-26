@@ -28,12 +28,14 @@ import java.util.ArrayList;
 
 public class GitReposAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
-    private RequestManager glideRequestManager;
-    private ItemClickListener itemClickListener;
+    private final RequestOptions glideRequestOptions;
+    private final RequestManager glideRequestManager;
+    private final ItemClickListener itemClickListener;
 
-    private AsyncListDiffer<GithubRepoMin> mDiffer = new AsyncListDiffer<>(this, new GitRepoDiffUtil());
+    private final AsyncListDiffer<GithubRepoMin> mDiffer = new AsyncListDiffer<>(this, new GitRepoDiffUtil());
 
     public GitReposAdapter(RequestManager glideRequestManager, ItemClickListener itemClickListener) {
+        this.glideRequestOptions = new RequestOptions();
         this.glideRequestManager = glideRequestManager;
         this.itemClickListener = itemClickListener;
     }
@@ -64,30 +66,31 @@ public class GitReposAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         mDiffer.submitList(githubRepos);
     }
 
-
     class GitRepoViewHolder extends BaseViewHolder {
 
-        private ItemGitRepoBinding binding;
+        private final ItemGitRepoBinding binding;
 
         public GitRepoViewHolder(ItemGitRepoBinding binding, int viewType) {
             super(binding.getRoot(), viewType);
             this.binding = binding;
+
+            getItemView().setOnClickListener(v -> {
+                GithubRepoMin githubRepoMin = mDiffer.getCurrentList().get(getAdapterPosition());
+                itemClickListener.onItemClick(
+                        getAdapterPosition(),
+                        getViewType(),
+                        MainActivity.REPO_CLICKED,
+                        githubRepoMin
+                );
+            });
         }
 
         public void bind(GithubRepoMin githubRepoMin) {
 
-            getItemView().setOnClickListener(v ->
-                    itemClickListener.onItemClick(
-                            getAdapterPosition(),
-                            getViewType(),
-                            MainActivity.REPO_CLICKED,
-                            githubRepoMin
-                    ));
-
             glideRequestManager
                     .load(githubRepoMin.getOrgAvatarUrl())
                     .placeholder(R.drawable.ic_placeholder_repo)
-                    .apply(new RequestOptions()
+                    .apply(glideRequestOptions
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .format(DecodeFormat.PREFER_RGB_565)
                             .override(AppConstant.GLIDE_ITEM_IMAGE_SIZE, AppConstant.GLIDE_ITEM_IMAGE_SIZE)

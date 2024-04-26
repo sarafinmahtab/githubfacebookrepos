@@ -26,21 +26,16 @@ import io.reactivex.Single;
 import retrofit2.HttpException;
 
 
-/**
- * Dedicated UseCase Business logic responsible for fetching github organization repos
- */
 @ActivityScope
 public class FetchOrgRepos extends SingleUseCase<ParamFetchOrgRepo, ResponseHolder<ArrayList<GithubRepoMin>>> {
 
     private final String TAG = this.getClass().getName();
 
-    private MainRepo mainRepo;
-    private SaveOrgRepos saveOrgReposUseCase;
+    private final MainRepo mainRepo;
+    private final SaveOrgRepos saveOrgReposUseCase;
 
     @Inject
     public FetchOrgRepos(MainRepo mainRepo, SaveOrgRepos saveOrgRepos) {
-        // Telling rx java to load this use case with IO thread and
-        // by default observe on main thread.
         threadExecutorScheduler = WorkScheduler.with(SchedulerType.IO);
 
         this.mainRepo = mainRepo;

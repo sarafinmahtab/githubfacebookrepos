@@ -12,18 +12,15 @@ import androidx.annotation.NonNull;
  */
 public final class ResponseHolder<T> {
 
-
     private Status status;
     private T data;
     private Throwable error;
-
 
     private ResponseHolder(Status status, T data, Throwable error) {
         this.status = status;
         this.data = data;
         this.error = error;
     }
-
 
     public Status getStatus() {
         return status;
@@ -41,13 +38,13 @@ public final class ResponseHolder<T> {
     @Override
 
     public String toString() {
-
-        if (status == Status.SUCCESS) {
-            return "Success[data=" + getData() + "]";
-        } else if (status == Status.ERROR) {
-            return "Error[exception=" + getError() + "]";
-        } else {
-            return super.toString();
+        switch (status) {
+            case SUCCESS:
+                return "Success[data=" + getData() + "]";
+            case ERROR:
+                return "Error[exception=" + getError() + "]";
+            default:
+                return super.toString();
         }
     }
 

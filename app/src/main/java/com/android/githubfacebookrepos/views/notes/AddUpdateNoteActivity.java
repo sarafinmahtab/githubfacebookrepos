@@ -33,9 +33,7 @@ public class AddUpdateNoteActivity extends AppCompatActivity implements View.OnC
         activity.startActivity(intent);
     }
 
-
     private final String TAG = this.getClass().getName();
-
 
     private ActivityAddUpdateNoteBinding binding;
     private AddUpdateNoteViewModel viewModel;
@@ -43,10 +41,8 @@ public class AddUpdateNoteActivity extends AppCompatActivity implements View.OnC
     @Inject
     ViewModelFactory viewModelFactory;
 
-
     private RepoNote repoNote;
     private GithubRepoMin githubRepoMin;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +53,6 @@ public class AddUpdateNoteActivity extends AppCompatActivity implements View.OnC
 
         setUpToolbar();
 
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_update_note);
 
         MainApplication application = (MainApplication) getApplicationContext();
@@ -65,25 +60,21 @@ public class AddUpdateNoteActivity extends AppCompatActivity implements View.OnC
 
         viewModel = new ViewModelProvider(this, viewModelFactory).get(AddUpdateNoteViewModel.class);
 
-
         binding.setGitRepoMin(githubRepoMin);
 
         binding.startAddNoteTextView.setOnClickListener(this);
-
 
         viewModel.repoNoteLiveData.observe(this, repoNoteObserver);
 
         viewModel.fetchRepoNote(githubRepoMin.getRepoId());
     }
 
-    private Observer<ResponseHolder<RepoNote>> repoNoteObserver = new Observer<ResponseHolder<RepoNote>>() {
+    private final Observer<ResponseHolder<RepoNote>> repoNoteObserver = new Observer<ResponseHolder<RepoNote>>() {
         @Override
         public void onChanged(ResponseHolder<RepoNote> repoNoteResponseHolder) {
             switch (repoNoteResponseHolder.getStatus()) {
 
                 case LOADING:
-
-                    // Show a loader view if need
 
                     break;
                 case SUCCESS:

@@ -13,7 +13,6 @@ import io.realm.RealmObject;
 import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
 
-
 /**
  * Repo Note model keeps note corresponding to repoId
  * <p>
@@ -21,7 +20,6 @@ import io.realm.annotations.PrimaryKey;
  * A search index will make the Realm file larger and inserts slower but queries will be faster.
  */
 public class RepoNote extends RealmObject implements Parcelable {
-
     @PrimaryKey
     private String noteId;
     private String note;
@@ -29,7 +27,6 @@ public class RepoNote extends RealmObject implements Parcelable {
     private String dateFormatted;
     @Index
     private int repoId;
-
 
     public RepoNote() {
     }

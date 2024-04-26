@@ -20,19 +20,12 @@ import io.reactivex.Single;
 @AppScope
 public class RemoteDataSourceImpl implements RemoteDataSource {
 
-    private final String TAG = this.getClass().getName();
-
     private ApiService apiService;
 
     private RemoteDataSourceImpl() {
 
     }
 
-    /**
-     * Inject tells Dagger how to provide instances of this type
-     *
-     * @param apiService This instance will be provided by dagger
-     */
     @Inject
     public RemoteDataSourceImpl(ApiService apiService) {
         this.apiService = apiService;

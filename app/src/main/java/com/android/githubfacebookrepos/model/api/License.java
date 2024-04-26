@@ -8,7 +8,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class License implements Parcelable {
-
     @SerializedName("key")
     @Expose
     private String key;
@@ -33,9 +32,6 @@ public class License implements Parcelable {
         this.nodeId = ((String) in.readValue((String.class.getClassLoader())));
     }
 
-    /**
-     * No args constructor for use in serialization
-     */
     public License() {
     }
 

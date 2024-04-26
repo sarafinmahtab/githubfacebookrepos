@@ -55,7 +55,7 @@ public class AddNoteDialog extends BottomSheetDialogFragment {
 
     private DialogAddNoteBinding binding;
 
-    private AddNoteListener addNoteListener;
+    private final AddNoteListener addNoteListener;
 
     public AddNoteDialog(AddNoteListener addNoteListener) {
         this.addNoteListener = addNoteListener;
@@ -80,7 +80,6 @@ public class AddNoteDialog extends BottomSheetDialogFragment {
             CommonUtil.showSoftKeyboardForced(getActivity(), binding.noteEditText);
         }
 
-
         binding.noteEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -102,7 +101,6 @@ public class AddNoteDialog extends BottomSheetDialogFragment {
             }
         });
 
-
         binding.addNoteImageView.setOnClickListener(v -> {
             String note = editedNote != null ? editedNote : currentNote;
             if (note == null || note.isEmpty()) {
@@ -113,7 +111,6 @@ public class AddNoteDialog extends BottomSheetDialogFragment {
                 dismiss();
             }
         });
-
 
         return binding.getRoot();
     }

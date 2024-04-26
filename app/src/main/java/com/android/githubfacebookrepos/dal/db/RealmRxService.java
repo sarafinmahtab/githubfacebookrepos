@@ -29,7 +29,6 @@ public class RealmRxService {
 
     @Inject
     public RealmRxService() {
-
     }
 
     public Single<ArrayList<GithubRepoMin>> fetchCachedGithubRepo(String orgName) {

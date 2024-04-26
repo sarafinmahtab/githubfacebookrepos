@@ -13,7 +13,7 @@ public class JobExecutor implements Executor {
     public static final int MINIMUM_THREADS = 3;
     private static JobExecutor jobExecutor;
 
-    private Executor threadPoolExecutor;
+    private final Executor threadPoolExecutor;
 
     public JobExecutor(int numberOfThread) {
         threadPoolExecutor = Executors.newFixedThreadPool(numberOfThread);

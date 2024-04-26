@@ -9,10 +9,6 @@ import com.android.githubfacebookrepos.di.ActivityScope;
 import dagger.Subcomponent;
 
 
-/**
- * Scope annotation that the [MainComponent] uses
- * Classes annotated with @ActivityScope will have a unique instance in this Component
- */
 @ActivityScope
 @Subcomponent
 public interface MainComponent {

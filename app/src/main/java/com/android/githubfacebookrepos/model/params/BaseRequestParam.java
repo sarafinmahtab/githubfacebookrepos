@@ -6,8 +6,8 @@ package com.android.githubfacebookrepos.model.params;
 
 public class BaseRequestParam {
 
-    private boolean shouldCacheResponse;
-    private boolean isNetworkConnectionAvailable;
+    private final boolean shouldCacheResponse;
+    private final boolean isNetworkConnectionAvailable;
 
     public BaseRequestParam(boolean shouldCacheResponse, boolean isNetworkConnectionAvailable) {
         this.shouldCacheResponse = shouldCacheResponse;

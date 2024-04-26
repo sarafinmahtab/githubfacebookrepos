@@ -19,7 +19,7 @@ public abstract class BaseReactiveUseCase {
             WorkScheduler.with(JobExecutor.init(JobExecutor.MINIMUM_THREADS));
     protected Scheduler postExecutionThreadScheduler = WorkScheduler.with(SchedulerType.MAIN);
 
-    private CompositeDisposable disposables = new CompositeDisposable();
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
     public void dispose() {
         if (!disposables.isDisposed()) {

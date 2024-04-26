@@ -4,9 +4,7 @@ package com.android.githubfacebookrepos.model.exceptions;
  * Created by Arafin Mahtab on 6/17/20.
  */
 
-/**
- * Used for readability of network error
- */
+
 public class NetworkException extends Exception {
 
     private int errorCode;
